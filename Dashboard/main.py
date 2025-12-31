@@ -47,7 +47,7 @@ def load_data():
     base_path = os.path.dirname(os.path.abspath(__file__))
     
     # 2. Construye la ruta al excel
-    file_path = os.path.join(base_path, 'data', 'LIGIE_HTS_Dashboard.xlsx')
+    file_path = os.path.join(base_path, 'data', 'LIGIE_HTS_Dashboard_v3.xlsx')
 
     
     # --- DEBUGGING (Verás esto en los logs de Streamlit si falla) ---
