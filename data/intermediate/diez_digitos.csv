@@ -75,7 +75,8 @@ HTS Code,Description
 0201305055,Other. Brisket cuts.
 0201305065,Other. Hip cuts.
 0201305075,Other. Flank or plate cuts.
-0201305085,Other. Other.
+0201305091,Other. Other. Certified organic.
+0201305097,Other. Other. Other.
 0201308010,Bison.
 0201308090,Other.
 0202100510,Veal.
@@ -95,7 +96,10 @@ HTS Code,Description
 0202305055,Other. Brisket cuts.
 0202305065,Other. Hip cuts.
 0202305075,Other. Flank or plate cuts.
-0202305085,Other. Other.
+0202305091,Other. Other. Certified organic.
+0202305097,Other. Other. Other.
+0202308015,Certified organic.
+0202308025,Other.
 0203121010,Hams and cuts thereof.
 0203121020,Shoulders and cuts thereof.
 0203129010,Hams and cuts thereof.
@@ -767,6 +771,8 @@ Euphausia superba)."
 0709404040,Other.
 0709406020,Certified organic.
 0709406040,Other.
+0709510110,Certified organic.
+0709510150,Other.
 0709602010,Greenhouse.
 0709602020,Other. Jalapeno.
 0709602030,Other. Mini sweet peppers.
@@ -797,6 +803,8 @@ Euphausia superba)."
 0709604087,Other. Sweet bell-type peppers (Capsicum annum). Other. Other. Orange.
 0709604091,Other. Sweet bell-type peppers (Capsicum annum). Other. Other. Other.
 0709604095,Other. Other.
+0709700010,Certified organic.
+0709700050,Other.
 0709932020,Certified organic. Zucchini.
 0709932022,Certified organic. Butternut.
 0709932025,Certified organic. Grey.
@@ -823,7 +831,8 @@ Euphausia superba)."
 0710807060,Other.
 0710809710,Asparagus.
 0710809722,Broccoli. Spears.
-0710809724,Broccoli. Other. In containers each holding more than 1.4 kg.
+0710809723,Broccoli. Other. In containers each holding more than 1.4 kg. Certified organic.
+0710809725,Broccoli. Other. In containers each holding more than 1.4 kg. Other.
 0710809726,Broccoli. Other. Other.
 0710809730,Cauliflower.
 0710809755,"Garlic, reduced in size beyond the clove, whether or not individually quick frozen."
@@ -887,6 +896,8 @@ Euphausia superba)."
 0804102090,Other.
 0804304010,Certified organic.
 0804304090,Other.
+0804306010,Certified organic.
+0804306090,Other.
 0804400020,Hass avocados and avocados determined by the Secretary of Agriculture to be Hass-like. Certified organic.
 0804400040,Hass avocados and avocados determined by the Secretary of Agriculture to be Hass-like. Other.
 0804400090,Other.
@@ -898,7 +909,8 @@ Euphausia superba)."
 0804506055,Mangoes. Other.
 0804506065,Mangosteens.
 0804506075,Other.
-0804508010,Mangoes.
+0804508020,Mangoes. Certified organic.
+0804508040,Mangoes. Other.
 0804508090,Other.
 0805100020,Temple oranges.
 0805100050,Other. Certified organic.
@@ -998,15 +1010,21 @@ Euphausia superba)."
 0811100020,In immediate containers each holding not more than 1.2 liters.
 0811100050,In immediate containers each holding more than 1.2 liters. Containing cane and/or beet sugar. Not more than 25 percent by weight.
 0811100060,In immediate containers each holding more than 1.2 liters. Containing cane and/or beet sugar. More than 25 percent by weight.
-0811100070,In immediate containers each holding more than 1.2 liters. Other.
+0811100075,In immediate containers each holding more than 1.2 liters. Other. Certified organic.
+0811100085,In immediate containers each holding more than 1.2 liters. Other. Other.
 0811202025,Raspberries. Red Raspberries.
 0811202035,Raspberries. Other.
 0811202040,Other.
 0811204030,Blackberries.
 0811204090,Other.
-0811902024,Wild.
+0811902025,Wild. Certified organic.
+0811902027,Wild. Other.
 0811902030,Cultivated (Including highbush). Certified organic.
 0811902040,Cultivated (Including highbush). Other.
+0811905010,Certified organic.
+0811905090,Other.
+0811905210,Certified organic.
+0811905290,Other.
 0811908040,Cherries. Sweet varieties.
 0811908060,Cherries. Tart varieties.
 0811908085,"Frozen mixes only of combinations of strawberries, blueberries, red raspberries or blackberries."
@@ -1128,6 +1146,8 @@ Euphausia superba)."
 1103130060,Other.
 1103200010,Of wheat.
 1103200090,Of other cereals.
+1104120010,Certified organic.
+1104120090,Other.
 1108110010,For food use.
 1108110090,Other.
 1108120010,For food use.
@@ -1309,6 +1329,8 @@ Euphausia superba)."
 1512190040,Safflower oil.
 1512290020,"Once-refined (subjected to alkalai or caustic wash, but not bleached or deodorized)."
 1512290040,"Other (fully refined, washed, bleached or deodorized)."
+1513190030,Certified organic.
+1513190090,Other.
 1514919010,Rape or colza oil and its fractions.
 1514919020,Mustard seed oil and its fractions.
 1514995010,Rape or colza oil and its fractions.
@@ -1460,6 +1482,8 @@ Euphausia superba)."
 1704903520,"Put up for retail sale. Containing peanuts, peanut butter or peanut paste."
 1704903550,Put up for retail sale. Other.
 1704903590,Other.
+1801000010,Certified organic.
+1801000090,Other.
 1806202010,Not containing butterfat or other milk solids.
 1806202090,Containing butterfat or other milk solids.
 1806310041,"Confectionery. Containing peanuts, peanut butter or peanut paste."
@@ -1597,6 +1621,8 @@ Euphausia superba)."
 2008979050,Packed in a liquid medium in airtight containers. Other. Other.
 2008979092,Other. Prepared cereal products.
 2008979094,Other. Other.
+2008991010,Certified organic.
+2008991090,Other.
 2008991810,"Wild blueberries, canned."
 2008991890,Other.
 2008992120,Red Raspberries.
@@ -1604,7 +1630,9 @@ Euphausia superba)."
 2008997110,Sliced.
 2008997120,Whole.
 2008999110,"Bean cake, bean stick, miso and similar products."
-2008999190,Other.
+2008999150,Seaweed. Certified organic.
+2008999155,Seaweed. Other.
+2008999195,Other.
 2009110020,In containers each holding less than 0.946 liter.
 2009110040,In containers each holding 0.946 liter or more but not more than 3.785 liters.
 2009110060,In containers of more than 3.785 liters.
@@ -1635,7 +1663,8 @@ Euphausia superba)."
 2009690060,Other.
 2009790015,Frozen. Certified organic.
 2009790017,Frozen. Other.
-2009790020,Other.
+2009790040,Other. Certified organic.
+2009790060,Other. Other.
 2009896515,Tart cherry juice concentrate. Certified organic.
 2009896520,Tart cherry juice concentrate. Other.
 2009896530,Tart cherry juice. Certified organic.
@@ -1645,7 +1674,9 @@ Euphausia superba)."
 2009897055,"Berry juice. Red raspberry juice, including concentrate."
 2009897065,Berry juice. Other.
 2009897070,Mango Juice.
-2009897091,Other.
+2009897095,Coconut water. Certified organic.
+2009897097,Coconut water. Other.
+2009897099,Other.
 2009898031,In airtight containers.
 2009898039,Other.
 2101112126,Not decaffeinated. Packaged for retail sale.
@@ -1690,7 +1721,9 @@ Euphausia superba)."
 2202910010,In aluminum containers.
 2202910020,Other.
 2202999110,In aluminum containers.
-2202999120,Other.
+2202999130,Other. Almond-based drinks. Certified organic.
+2202999135,Other. Almond-based drinks. Other.
+2202999190,Other. Other.
 2203000030,In containers each holding not over 4 liters. In glass containers.
 2203000060,In containers each holding not over 4 liters. Other.
 2203000090,In containers each holding over 4 liters.
@@ -1953,6 +1986,14 @@ Euphausia superba)."
 2403999060,Burley.
 2403999065,"Other. Partially manufactured, blended or mixed tobacco."
 2403999070,Other. Other.
+2404120510,Disposable electronic cigarettes (e-cigarettes) and similar disposable personal electronic vaporizing devices containing nicotine.
+2404120590,Other.
+2404121010,Disposable electronic cigarettes (e-cigarettes) and similar disposable personal electronic vaporizing devices containing nicotine.
+2404121090,Other.
+2404190510,Disposable electronic cigarettes (e-cigarettes) and similar disposable personal electronic vaporizing devices without nicotine.
+2404190590,Other.
+2404191010,Disposable electronic cigarettes (e-cigarettes) and similar disposable personal electronic vaporizing devices without nicotine.
+2404191090,Other.
 2503000010,Crude or unrefined sulfur.
 2503000090,Other.
 2506100010,Sands (other than natural) containing by weight 95 percent or more of silica and not more than 0.6 percent of oxide of iron.
@@ -2324,7 +2365,8 @@ Euphausia superba)."
 2917340110,Dibutyl orthophthalate.
 2917340150,Other.
 2918165010,Sodium gluconate.
-2918165050,Other.
+2918165020,Calcium gluconate.
+2918165090,Other.
 2918992010,"2,4-Dichlorophenoxyacetic acid, its salts and esters."
 2918992015,2-Methyl-4-chlorophenoxyacetic acid.
 2918992050,Other.
@@ -2441,6 +2483,8 @@ Euphausia superba)."
 2933696021,Pesticides. Other.
 2933696030,Products used principally for rubber processing.
 2933696050,Other.
+2933910010,Lorazepam (INN); salts thereof.
+2933910050,Other.
 2933995510,Tolmetin.
 2933995520,Tolmetin sodium dihydrate.
 2933995530,Tolmetin sodium (anhydrous).
@@ -2479,7 +2523,8 @@ Euphausia superba)."
 2941901050,Other.
 3001900110,"Glands and other organs, dried, whether or not powdered. Liver."
 3001900150,"Glands and other organs, dried, whether or not powdered. Other."
-3001900190,Other.
+3001900165,Other. Heparin.
+3001900195,Other. Other.
 3002120010,Human blood plasma.
 3002120020,"Normal human blood sera, whether or not freeze-dried."
 3002120030,Human immune blood sera.
@@ -2505,7 +2550,8 @@ Euphausia superba)."
 3004101020,Other. Singles.
 3004101045,Other. Combination antibiotics.
 3004105010,For veterinary use.
-3004105045,Other. Combination antibiotics.
+3004105048,Other. Combination antibiotics. Containing piperacillin and tazobactam or its salts.
+3004105049,Other. Combination antibiotics. Other.
 3004105055,Other. Other. Containing amoxicillin or its salts. For oral suspension.
 3004105065,Other. Other. Containing amoxicillin or its salts. Other.
 3004105075,Other. Other. Other.
@@ -2515,9 +2561,21 @@ Euphausia superba)."
 3004200045,Other. Other. Containing azithromycin or its salts.
 3004200055,Other. Other. Containing clindamycin or its salts.
 3004200065,Other. Other. Containing doxycycline or its salts.
-3004200075,Other. Other. Other.
+3004200070,Other. Other. Containing cefdinir or its salts.
+3004200071,Other. Other. Containing cefepime or its salts.
+3004200072,Other. Other. Containing ceftazidime or its salts.
+3004200076,Other. Other. Containing meropenem or its salts.
+3004200080,Other. Other. Containing vancomycin or its salts.
+3004200083,Other. Other. Other.
+3004320010,Containing dexamethasone or its salts.
+3004320040,Containing methylprednisolone or its salts.
+3004320060,Other.
 3004390010,For veterinary use.
-3004390050,Other.
+3004390020,Other. Containing epinephrine.
+3004390030,Other. Containing levothyroxine or its salts.
+3004390040,Other. Containing norepinephrine.
+3004390045,Other. Containing vasopressin.
+3004390055,Other. Other.
 3004490005,For veterinary use.
 3004490010,Other. Cardiovascular medicaments.
 3004490020,"Other. Medicaments primarily affecting the central nervous system. Anticonvulsants, hypnotics, and sedatives."
@@ -2532,49 +2590,76 @@ Euphausia superba)."
 3004505030,Other. Multiple vitamins. Combined with minerals or other nutrients.
 3004505040,Other. Multiple vitamins. Other.
 3004909201,For veterinary use.
-3004909202,Other. Anti-infective medicaments. Antivirals.
-3004909204,Other. Anti-infective medicaments. Antifungals. Containing fluconazole or its salts.
-3004909206,Other. Anti-infective medicaments. Antifungals. Other.
-3004909208,Other. Anti-infective medicaments. Antiprotozoals (excluding goods described in subheading note 2 to this chapter). Containing metronidazole or its salts.
-3004909212,Other. Anti-infective medicaments. Antiprotozoals (excluding goods described in subheading note 2 to this chapter). Other.
-3004909213,Other. Anti-infective medicaments. Sulfonamides.
-3004909214,Other. Anti-infective medicaments. Other.
-3004909215,Other. Antineoplastic and immunosuppressive medicaments.
-3004909216,Other. Cardiovascular medicaments. Containing metoprolol or its salts.
-3004909217,Other. Cardiovascular medicaments. Containing amiodarone or its salts.
-3004909218,Other. Cardiovascular medicaments. Containing diltiazem or its salts.
-3004909219,Other. Cardiovascular medicaments. Containing hydralazine or its salts.
-3004909221,Other. Cardiovascular medicaments. Other.
-3004909222,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Tolmetin."
-3004909223,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Tolmetin sodium dihyrate."
-3004909225,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Tolmetin sodium (anhydrous)."
-3004909227,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Containing ibuprofen or its salts. For oral suspension."
-3004909229,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Containing ibuprofen or its salts. Other."
-3004909231,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Containing acetaminophen or its salts. For oral suspension."
-3004909232,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Containing acetaminophen or its salts. Other."
-3004909233,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Containing O-Acetylsalicylic acid (Aspirin)."
-3004909234,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Other."
-3004909236,"Other. Medicaments primarily affecting the central nervous system. Anticonvulsants, hypnotics and sedatives."
-3004909237,"Other. Medicaments primarily affecting the central nervous system. Antidepressants, tranquilizers, and other psychotherapeutic agents. Containing lorazepam or its salts."
-3004909238,"Other. Medicaments primarily affecting the central nervous system. Antidepressants, tranquilizers, and other psychotherapeutic agents. Containing olanzapine or its salts."
-3004909239,"Other. Medicaments primarily affecting the central nervous system. Antidepressants, tranquilizers, and other psychotherapeutic agents. Other."
-3004909240,Other. Medicaments primarily affecting the central nervous system. Other.
-3004909242,Other. Dermatological agents and local anesthetics. Containing lidocaine or its salts.
-3004909244,Other. Dermatological agents and local anesthetics. Other.
-3004909250,Other. Medicaments primarily affecting the digestive system. Laxatives.
-3004909255,Other. Medicaments primarily affecting the digestive system. Antacids.
-3004909256,Other. Medicaments primarily affecting the digestive system. Containing famotidine or its salts.
-3004909257,Other. Medicaments primarily affecting the digestive system. Containing pantoprazole or its salts.
-3004909259,Other. Medicaments primarily affecting the digestive system. Other.
-3004909263,"Other. Preparations pimarily affecting the electrolytic, caloric or water balance. Diuretics. Containing furosemide and its salts."
-3004909266,"Other. Preparations pimarily affecting the electrolytic, caloric or water balance. Diuretics. Containing hydrochlorothiazide or its salts."
-3004909268,"Other. Preparations pimarily affecting the electrolytic, caloric or water balance. Diuretics. Other."
-3004909270,"Other. Preparations pimarily affecting the electrolytic, caloric or water balance. Other."
-3004909276,"Other. Medicaments primarily affecting the eyes, ears, or respiratory system. Cough and cold preparations."
-3004909280,"Other. Medicaments primarily affecting the eyes, ears, or respiratory system. Other. Antihistamines."
-3004909284,"Other. Medicaments primarily affecting the eyes, ears, or respiratory system. Other. Containing albuterol sulfate."
-3004909289,"Other. Medicaments primarily affecting the eyes, ears, or respiratory system. Other. Other."
-3004909291,Other. Other.
+3004909203,Other. Anti-infective medicaments. Antivirals. Containing acyclovir or its salts.
+3004909204,Other. Anti-infective medicaments. Antivirals. Containing oseltamivir or its salts.
+3004909205,"Other. Anti-infective medicaments. Antivirals. Containing valganciclovir, peramivir or their salts."
+3004909206,Other. Anti-infective medicaments. Antivirals. Other.
+3004909207,Other. Anti-infective medicaments. Antifungals. Containing fluconazole or its salts.
+3004909208,Other. Anti-infective medicaments. Antifungals. Other.
+3004909209,Other. Anti-infective medicaments. Antiprotozoals (excluding goods described in subheading note 2 to this chapter). Containing metronidazole or its salts.
+3004909210,Other. Anti-infective medicaments. Antiprotozoals (excluding goods described in subheading note 2 to this chapter). Other.
+3004909211,Other. Anti-infective medicaments. Sulfonamides.
+3004909212,Other. Anti-infective medicaments. Other. Containing levofloxacin or its salts.
+3004909213,Other. Anti-infective medicaments. Other. Containing linezolid or its salts.
+3004909215,Other. Anti-infective medicaments. Other. Other.
+3004909216,Other. Antineoplastic and immunosuppressive medicaments.
+3004909217,Other. Cardiovascular medicaments. Containing metoprolol or its salts.
+3004909218,Other. Cardiovascular medicaments. Containing amiodarone or its salts.
+3004909219,Other. Cardiovascular medicaments. Containing diltiazem or its salts.
+3004909220,Other. Cardiovascular medicaments. Containing hydralazine or its salts.
+3004909222,Other. Cardiovascular medicaments. Containing enoxaparin or its salts.
+3004909223,Other. Cardiovascular medicaments. Containing labetalol or its salts.
+3004909224,"Other. Cardiovascular medicaments. Containing argatroban, adenosine, amlodipine, esmolol, dobutamine, phenoxybenzamine or their salts."
+3004909225,Other. Cardiovascular medicaments. Other.
+3004909226,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Tolmetin."
+3004909227,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Tolmetin sodium dihydrate."
+3004909228,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Tolmetin sodium (anhydrous)."
+3004909229,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Containing ibuprofen or its salts. For oral suspension."
+3004909230,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Containing ibuprofen or its salts. Other."
+3004909232,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Containing acetaminophen or its salts. For oral suspension."
+3004909233,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Containing acetaminophen or its salts. Other."
+3004909234,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Containing O-Acetylsalicylic acid (Aspirin)."
+3004909235,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Containing tramadol."
+3004909236,"Other. Medicaments primarily affecting the central nervous system. Analgesics, antipyretics and nonhormonal anti-inflammatory agents. Other."
+3004909237,"Other. Medicaments primarily affecting the central nervous system. Anticonvulsants, hypnotics and sedatives. Containing dexmedetomidine, etomidate, midazolam, propofol or their salts."
+3004909238,"Other. Medicaments primarily affecting the central nervous system. Anticonvulsants, hypnotics and sedatives. Containing midazolam or its salts."
+3004909239,"Other. Medicaments primarily affecting the central nervous system. Anticonvulsants, hypnotics and sedatives. Containing phenytoin or its salts."
+3004909240,"Other. Medicaments primarily affecting the central nervous system. Anticonvulsants, hypnotics and sedatives. Containing propofol or its salts."
+3004909241,"Other. Medicaments primarily affecting the central nervous system. Anticonvulsants, hypnotics and sedatives. Containing levetiracetam, phenytoin or their salts."
+3004909242,"Other. Medicaments primarily affecting the central nervous system. Anticonvulsants, hypnotics and sedatives. Containing etomidate or its salts."
+3004909243,"Other. Medicaments primarily affecting the central nervous system. Anticonvulsants, hypnotics and sedatives. Other."
+3004909244,"Other. Medicaments primarily affecting the central nervous system. Antidepressants, tranquilizers, and other psychotherapeutic agents. Containing lorazepam or its salts."
+3004909245,"Other. Medicaments primarily affecting the central nervous system. Antidepressants, tranquilizers, and other psychotherapeutic agents. Containing olanzapine or its salts."
+3004909246,"Other. Medicaments primarily affecting the central nervous system. Antidepressants, tranquilizers, and other psychotherapeutic agents. Other."
+3004909247,Other. Medicaments primarily affecting the central nervous system. Other. Containing rocuronium or its salts.
+3004909248,Other. Medicaments primarily affecting the central nervous system. Other. Containing succinylcholine or its salts.
+3004909249,Other. Medicaments primarily affecting the central nervous system. Other. Other.
+3004909250,Other. Dermatological agents and local anesthetics. Containing lidocaine or its salts.
+3004909251,Other. Dermatological agents and local anesthetics. Other.
+3004909252,Other. Medicaments primarily affecting the digestive system. Laxatives.
+3004909253,Other. Medicaments primarily affecting the digestive system. Antacids.
+3004909254,Other. Medicaments primarily affecting the digestive system. Containing famotidine or its salts.
+3004909255,Other. Medicaments primarily affecting the digestive system. Containing pantoprazole or its salts.
+3004909256,Other. Medicaments primarily affecting the digestive system. Containing ondansetron or its salts.
+3004909257,Other. Medicaments primarily affecting the digestive system. Containing glycopyrrolate or its salts.
+3004909258,Other. Medicaments primarily affecting the digestive system. Containing loperamide or its salts.
+3004909260,Other. Medicaments primarily affecting the digestive system. Other.
+3004909261,"Other. Preparations primarily affecting the electrolytic, caloric or water balance. Diuretics. Containing furosemide and its salts."
+3004909262,"Other. Preparations primarily affecting the electrolytic, caloric or water balance. Diuretics. Containing hydrochlorothiazide or its salts."
+3004909263,"Other. Preparations primarily affecting the electrolytic, caloric or water balance. Diuretics. Other."
+3004909264,"Other. Preparations primarily affecting the electrolytic, caloric or water balance. Other. Containing calcium gluconate."
+3004909265,"Other. Preparations primarily affecting the electrolytic, caloric or water balance. Other. Containing potassium chloride."
+3004909266,"Other. Preparations primarily affecting the electrolytic, caloric or water balance. Other. Containing sodium bicarbonate, in injection form."
+3004909267,"Other. Preparations primarily affecting the electrolytic, caloric or water balance. Other. Other."
+3004909268,"Other. Medicaments primarily affecting the eyes, ears, or respiratory system. Cough and cold preparations."
+3004909269,"Other. Medicaments primarily affecting the eyes, ears, or respiratory system. Other. Antihistamines. Containing diphenhydramine or its salts."
+3004909270,"Other. Medicaments primarily affecting the eyes, ears, or respiratory system. Other. Antihistamines. Other."
+3004909271,"Other. Medicaments primarily affecting the eyes, ears, or respiratory system. Other. Containing albuterol sulfate."
+3004909272,"Other. Medicaments primarily affecting the eyes, ears, or respiratory system. Other. Other. Containing timolol maleate."
+3004909273,"Other. Medicaments primarily affecting the eyes, ears, or respiratory system. Other. Other. Other."
+3004909274,Other. Other. Containing heparin sodium or its salts.
+3004909275,Other. Other. Containing zoledronic acid or its salts.
+3004909276,Other. Other. Other.
 3005905010,Laparotomy sponges.
 3005905090,Other.
 3102100010,Solid urea.
@@ -2714,6 +2799,9 @@ Euphausia superba)."
 3503005510,Edible gelatin.
 3503005520,Photographic gelatin.
 3503005550,Other.
+3504005010,From peas. Certified organic.
+3504005050,From peas. Other.
+3504005080,Other.
 3505100015,Dextrin. Derived from potato starch.
 3505100020,Dextrin. Other.
 3505100040,Other. Derived from corn (maize) starch.
@@ -2770,6 +2858,8 @@ Euphausia superba)."
 3707903290,Other.
 3801105010,Surface-modified spherical graphite.
 3801105090,Other.
+3801900010,Active anode material containing silicon.
+3801900050,Other.
 3802100010,Derived from coal.
 3802100020,Derived from coconut.
 3802100050,Other.
@@ -2786,6 +2876,8 @@ Euphausia superba)."
 3808945095,Other.
 3814005010,"Containing methyl chloroform (1,1,1-trichloro- ethane) or carbon tetrachloride."
 3814005090,Other.
+3815120010,With platinum group metals as the active substance.
+3815120090,Other.
 3816002010,Clay.
 3816002050,Other.
 3818000010,"Gallium arsenide wafers, doped."
@@ -8299,6 +8391,8 @@ Euphausia superba)."
 7306296050,Other.
 7306298110,Imported with coupling.
 7306298150,Other.
+7306301010,"Internally coated or lined with a non-electrically insulating material, suitable for use as electrical conduit."
+7306301090,Other.
 7306305010,"Suitable for use in boilers, superheaters, heat exchangers, condensers, refining furnaces and feedwater heaters, whether or not cold drawn."
 7306305015,"Other, cold-drawn."
 7306305020,"Other, cold-rolled (cold-reduced) with a wall thickness not exceeding 2.54 mm."
@@ -8642,9 +8736,10 @@ Euphausia superba)."
 7601209085,Other. Other. Foundry ingot of a kind described in statistical note 4 to this chapter.
 7601209095,Other. Other. Other.
 7602000035,Recyclable used beverage containers.
-7602000095,"Recyclable aluminum from industrial processes, including turnings, borings, shavings, filings, clippings and chips."
-7602000097,Other recyclable aluminum.
-7602000098,Other.
+7602000045,Recyclable aluminum auto and truck wheels.
+7602000055,"Recyclable aluminum from industrial processes, including turnings, borings, shavings, filings, clippings and chips."
+7602000065,Other recyclable aluminum.
+7602000075,Other.
 7604210010,Heat-treatable industrial alloys of a kind described in statistical note 7 to this chapter.
 7604210090,Other.
 7604291010,Heat-treatable industrial alloys of a kind described in statistical note 7 to this chapter.
@@ -8838,6 +8933,10 @@ Euphausia superba)."
 8301300090,Other.
 8301406030,"Door locks, locksets and other locks suitable for use with interior or exterior doors (except garage, overhead or sliding doors)."
 8301406060,Other.
+8301600010,Of copper or copper alloys.
+8301600060,Other.
+8301700010,Of copper or copper alloys.
+8301700060,Other.
 8302106030,"Suitable for interior and exterior doors (except garage, overhead or sliding doors)."
 8302106060,Suitable for furniture and cabinets.
 8302106090,Other.
@@ -9096,9 +9195,11 @@ Euphausia superba)."
 8415830060,Heat exchangers including condensing units. Condensing units. Exceeding 17.58 kW per hour.
 8415830070,Heat exchangers including condensing units. Other.
 8415830090,Other air conditioning machines not incorporating a refrigerating unit.
-8415908025,Air conditioning evaporator coils.
+8415908010,Air conditioning evaporator coils. Of copper or copper alloys.
+8415908020,Air conditioning evaporator coils. Other.
 8415908045,Other. Of automotive air conditioners.
-8415908065,Other. Of heat pumps.
+8415908050,Other. Of heat pumps. Of copper or copper alloys.
+8415908070,Other. Of heat pumps. Other.
 8415908085,Other. Other.
 8416200040,Gas burners.
 8416200080,Other.
@@ -9298,24 +9399,28 @@ Euphausia superba)."
 8431438090,Of other boring or sinking machinery.
 8431491010,"Of machinery of subheadings 8426.11, 8426.19 and 8426.30."
 8431491060,"Of mobile lifting frames, straddle carriers and works trucks fitted with a crane."
-8431491090,Other.
+8431491070,Other. Of copper or copper alloys.
+8431491080,Other. Other.
 8431499005,Attachments for mounting on machinery. Backhoe attachments.
 8431499010,Attachments for mounting on machinery. Front-end loader attachments.
 8431499015,Attachments for mounting on machinery. Rippers and rooters.
 8431499020,Attachments for mounting on machinery. Other.
 8431499025,Other. Parts of coal or rock cutters and tunneling machinery. Cast axle housings.
-8431499030,Other. Parts of coal or rock cutters and tunneling machinery. Other.
+8431499032,Other. Parts of coal or rock cutters and tunneling machinery. Other. Of copper or copper alloys.
+8431499034,Other. Parts of coal or rock cutters and tunneling machinery. Other. Other.
 8431499035,"Other. Parts of backhoes, shovels, clamshells and draglines. Cast axle housings."
 8431499036,"Other. Parts of backhoes, shovels, clamshells and draglines. Other. Road wheels."
 8431499038,"Other. Parts of backhoes, shovels, clamshells and draglines. Other. Wheel and tire assemblies."
-8431499044,"Other. Parts of backhoes, shovels, clamshells and draglines. Other. Other."
+8431499039,"Other. Parts of backhoes, shovels, clamshells and draglines. Other. Other. Of copper or copper alloys."
+8431499041,"Other. Parts of backhoes, shovels, clamshells and draglines. Other. Other. Other."
 8431499045,Other. Other. Scraper bowls for scrapers of subheadings 8429.30 and 8430.69.01.
 8431499050,Other. Other. Track links.
 8431499055,Other. Other. Cast axle housings.
 8431499081,Other. Other. Other. Steel forgings.
 8431499084,Other. Other. Other. Other. Road wheels.
 8431499090,Other. Other. Other. Other. Wheel and tire assemblies.
-8431499095,Other. Other. Other. Other. Other.
+8431499092,Other. Other. Other. Other. Other. Of copper or copper alloys.
+8431499094,Other. Other. Other. Other. Other. Other.
 8432100020,Moldboard plows except listers.
 8432100040,Disc plows.
 8432100060,Other.
@@ -9560,11 +9665,11 @@ Euphausia superba)."
 8460220040,Used or rebuilt.
 8460220080,Other.
 8460230040,Used or rebuilt.
-8460230080,Other.
+8460230055,"Other. External cylindrical, including universal."
+8460230065,Other. Internal cylindrical.
+8460230075,Other. Other.
 8460240005,Used or rebuilt.
-8460240010,"Other. External cylindrical, including universal."
-8460240030,Other. Internal cylindrical.
-8460240050,Other. Other.
+8460240080,Other.
 8460290105,Used or rebuilt.
 8460290110,"Other. External cylindrical, including universal."
 8460290130,Other. Internal cylindrical.
@@ -10018,7 +10123,8 @@ Euphausia superba)."
 8482800060,Combined ball and other cylindrical roller bearings.
 8482800080,Other.
 8482910010,Balls. Of alloy steel.
-8482910020,Balls. Other.
+8482910015,Balls. Of copper or copper alloys as described in statistical note 6 to this chapter.
+8482910030,Balls. Other.
 8482910040,Needles.
 8482910050,Tapered rollers.
 8482910070,Spherical rollers.
@@ -10191,7 +10297,8 @@ Euphausia superba)."
 8507308010,Sealed.
 8507308090,Other.
 8507600010,"Of a kind used as the primary source of electrical power for electrically powered vehicles of subheadings 8703.40, 8703.50, 8703.60, 8703.70 or 8703.80."
-8507600020,Other.
+8507600030,"Other. Battery energy storage systems fully encased within a housing, as described in statistical note 2 to this chapter."
+8507600090,Other. Other.
 8509400015,Blenders.
 8509400025,Other food mixers.
 8509400030,Juice extractors.
@@ -10474,10 +10581,10 @@ Euphausia superba)."
 8539320090,Other.
 8539490040,Ultraviolet lamps.
 8539490080,Other.
-8539520010,Of a type specified in statistical note 7(a) to this chapter.
-8539520020,Of a type specified in statistical note 7(b) to this chapter.
-8539520030,Of a type specified in statistical note 7(c) to this chapter.
-8539520040,Of a type specified in statistical note 7(d) to this chapter.
+8539520010,Of a type specified in statistical note 8(a) to this chapter.
+8539520020,Of a type specified in statistical note 8(b) to this chapter.
+8539520030,Of a type specified in statistical note 8(c) to this chapter.
+8539520040,Of a type specified in statistical note 8(d) to this chapter.
 8539520051,Straight linear tubes or U-shaped tubes.
 8539520091,Other.
 8540111030,Having a video display diagonal. Not exceeding 39 cm.
@@ -10507,13 +10614,14 @@ Euphausia superba)."
 8541210075,Other. With an operating frequency not less than 100 MHz.
 8541210095,Other. Other.
 8541290040,"Unmounted chips, dice and wafers."
-8541290075,Other. With an operating frequency not less than 30 MHz.
-8541290095,Other. Other.
+8541290055,Other. With an operating frequency less than 30 MHz.
+8541290065,"Other. With an operating frequency 30 MHz or greater but less than 30,000 MHz."
+8541290085,"Other. With an operating frequency 30,000 MHz or greater."
 8541300040,"Unmounted chips, dice and wafers."
 8541300080,Other.
-8541420010,Crystalline silicon photovoltaic cells of a kind described in statistical note 10 to this chapter.
+8541420010,Crystalline silicon photovoltaic cells of a kind described in statistical note 12 to this chapter.
 8541420080,Other.
-8541430010,Crystalline silicon photovoltaic cells of a kind described in statistical note 10 to this chapter.
+8541430010,Crystalline silicon photovoltaic cells of a kind described in statistical note 12 to this chapter.
 8541430080,Other.
 8541491010,"Unmounted chips, dice and wafers."
 8541491050,Other.
@@ -10527,6 +10635,8 @@ Euphausia superba)."
 8541600050,"Quartz designed for operating frequencies of. Exceeding 5 MHZ, but not exceeding 20 MHz."
 8541600060,Quartz designed for operating frequencies of. Exceeding 20 MHZ.
 8541600080,Other.
+8541900010,Frames for photovoltaic cells assembled in modules or made up into panels (as covered by subheading 8541.43.00).
+8541900080,Other.
 8542310015,Controllers (including microcontrollers). 8-bit.
 8542310020,Controllers (including microcontrollers). 16-bit.
 8542310025,Controllers (including microcontrollers). 32-bit.
@@ -10569,7 +10679,7 @@ Euphausia superba)."
 8544110020,33 AWG (0.18 mm in diameter) and finer.
 8544110030,22 AWG (0.643 mm in diameter) and finer but larger than 33 AWG (0.18 mm in diameter).
 8544110050,Other.
-8544429010,Extension cords as defined in statistical note 6 to this chapter.
+8544429010,Extension cords as defined in statistical note 7 to this chapter.
 8544429090,Other.
 8544493040,For a voltage exceeding 600 V.
 8544493080,Other.
@@ -11270,7 +11380,8 @@ Euphausia superba)."
 9401999005,"For children’s highchairs, booster seats and similar seats."
 9401999021,"Other of textile material, cut to shape."
 9401999030,"Mechanically collapsible sofa bed seat deck components, covered or uncovered as described in statistical note 2 to this chapter."
-9401999070,Other.
+9401999040,Of seats of a kind used for aircraft.
+9401999085,Other.
 9402900010,Hospital beds.
 9402900020,Other.
 9403100020,Filing cabinets.
@@ -11587,7 +11698,7 @@ Euphausia superba)."
 9802008015,Articles eligible pursuant to bilateral textile agreements for entry under a Special Access Program and entered in compliance with procedures established by the Committee for the Implementation of Textile Agreements (CITA).
 9802008016,Articles eligible pursuant to bilateral textile agreements for entry under the Outward Processing Programs and entered in compliance with procedures established by the Committee for the Implementation of Textile Agreements (CITA).
 9802008040,Articles for which duty free treatment is claimed under U.S. note 2(b) to this subchapter.
-9802008042,"Articles for which duty free treatment is claimed under U.S. note 7(a) to this subchapter [Compiler’s note: The effective period for this heading ended September 30, 2025.]."
+9802008042,Articles for which duty free treatment is claimed under U.S. note 7(a) to this subchapter.
 9802008044,Articles for which duty free treatment is claimed under U.S. note 7(b)(i) to this subchapter.
 9802008046,Articles for which duty free treatment is claimed under U.S. note 7(b)(ii) to this subchapter.
 9802008048,Articles for which duty free treatment is claimed under U.S. note 7(c) to this subchapter.
