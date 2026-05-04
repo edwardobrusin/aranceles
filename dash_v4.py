@@ -127,10 +127,11 @@ RAW_232_MAP = {
 SEC232_MAP = {k.replace('.', '').strip(): v for k, v in RAW_232_MAP.items()}
 
 # -----------------------------------------------------------------------------
-# 2. FUNCIONES DE LIMPIEZA
+# 2. FUNCIONES DE LIMPIEZA Y PARSEO
 # -----------------------------------------------------------------------------
 
 def clean_percentage(val):
+    """Función conservada para usos genéricos o cálculos numéricos limpios"""
     if pd.isna(val): return 0.0
     val_str = str(val).strip().lower()
     if 'annex' in val_str: return "Annex III"
@@ -140,8 +141,46 @@ def clean_percentage(val):
         return float(clean) if clean else 0.0
     except: return 0.0
 
+def parse_hts_duties(val):
+    """
+    Nuevo Parser dinámico para extraer 'Math Base Duty', 'General Duty' y 'Fixed Duty'.
+    Maneja aranceles mixtos como '$1.035/kg + 8.5%'.
+    """
+    if pd.isna(val): 
+        return 0.0, "Free", None
+        
+    val_str = str(val).strip()
+    lower_val = val_str.lower()
+    if lower_val in ['ex.', 'ex', 'libre', 'free', 'n/a', '-', '']:
+        return 0.0, "Free", None
+        
+    parts = [p.strip() for p in val_str.split('+')]
+    
+    general_math = 0.0
+    general_str = None
+    fixed_str = None
+    
+    for part in parts:
+        if '%' in part:
+            general_str = part
+            try:
+                # Extrae únicamente la porción numérica de la sección de porcentaje
+                general_math = float(''.join(c for c in part if c.isdigit() or c == '.'))
+            except: 
+                pass
+        else:
+            fixed_str = part
+            
+    # Si no hubo signo '+', determinamos si es porcentaje o texto fijo
+    if len(parts) == 1:
+        if '%' in val_str:
+            return general_math, val_str, None
+        else:
+            return 0.0, None, val_str
+            
+    return general_math, general_str, fixed_str
+
 def normalize_cols(df):
-    # Quitamos el capitalize automático para evitar romper los nombres internos
     df.columns = df.columns.str.strip()
     return df
 
@@ -165,7 +204,7 @@ def load_data(target_country="China"):
     ligie.rename(columns=map_ligie, inplace=True)
     ligie = clean_numeric_code(ligie, 'Código')
     
-    # HTS (Se eliminó la restricción obligatoria de 8 dígitos)
+    # HTS
     hts = pd.read_parquet(f'{base_path}hts.parquet')
     hts = normalize_cols(hts)
     hts.rename(columns=map_hts, inplace=True)
@@ -221,53 +260,38 @@ def load_data(target_country="China"):
 # -----------------------------------------------------------------------------
 
 def get_10digit_children(hts_8_digit, sec232_db, auxiliar_db):
-    """Busca si la fracción de 8 dígitos tiene desgloses de 10 dígitos en la 232 y trae TODAS las opciones"""
     hts_8 = str(hts_8_digit).strip()
-    
-    # 1. Verificamos si al menos un hijo está afectado por la 232
     children_232 = sec232_db[
         (sec232_db['Code'].str.len() == 10) & 
         (sec232_db['Code'].str.startswith(hts_8))
     ].copy()
     
-    # Si ningún hijo a 10 dígitos está en la 232, dejamos que el código siga su curso natural
     if children_232.empty: 
         return pd.DataFrame()
         
-    # 2. Si hay ambigüedad, traemos TODOS los hijos posibles de la base auxiliar
     all_children = auxiliar_db[
         (auxiliar_db['Code'].str.len() == 10) & 
         (auxiliar_db['Code'].str.startswith(hts_8))
     ].copy()
     
     if all_children.empty:
-        # Fallback por si la base auxiliar no los tiene
         children_232['Description'] = children_232['Code'] + " - Opción específica"
         return children_232[['Code', 'Duty', 'Description']]
         
-    # 3. Cruzamos ambas bases para heredar el arancel 232 solo a los afectados
     sec232_unique = children_232[['Code', 'Duty']].drop_duplicates('Code')
     merged = all_children.merge(sec232_unique, on='Code', how='left')
-    
-    # Los que NO cruzaron (ej. 8207200030) obtienen arancel "0"
     merged['Duty'] = merged['Duty'].fillna("0")
-    
-    # Formateamos la etiqueta para que el usuario vea el código exacto
     merged['Description'] = merged['Code'] + " - " + merged['Description'].fillna("Descripción no disponible")
     
     return merged
 
 def get_direct_matches(hts_8, sec232_db):
-    """Busca jerárquicamente coincidencias de 8, 5 y 4 dígitos en la 232"""
     for length in [8, 5, 4]:
         sub = hts_8[:length]
         matches = sec232_db[sec232_db['Code'] == sub]
         if not matches.empty:
-            # Retornamos el código que hizo match y su arancel
             return sub, matches.iloc[0]['Duty']
     return None, 0.0
-
-# (Eliminamos la función get_duty_for_selection ya que dependía del "Heading")
 
 # -----------------------------------------------------------------------------
 # 4. INTERFAZ
@@ -279,7 +303,6 @@ def show_hierarchy_item(label, value):
         st.markdown(f"**{label}:** {val_str}")
 
 # --- SIDEBAR ---
-# Inyectar Logos de NAFIN y Bancomext en el Sidebar
 col_logo1, col_logo2 = st.sidebar.columns(2)
 try:
     with col_logo1:
@@ -347,14 +370,6 @@ if st.sidebar.button("Buscar") or hs6_input:
                 except: pass
 
                 ligie_filtrado['Tasa General'] = ligie_filtrado['General'].apply(clean_percentage)
-                avg_rate = ligie_filtrado['Tasa General'].mean()
-
-                st.markdown(f"""
-                <div class="metric-container" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; border-top: 4px solid #2596be;">
-                    <div class="metric-title" style="margin-bottom: 0;">Arancel Promedio LIGIE</div>
-                    <div class="metric-value" style="margin: 0; font-size: 1.7rem;">{avg_rate:,.2f}% <span class='bandera' style='font-size: 1.3rem;'>🇨🇳</span></div>
-                </div>
-                """, unsafe_allow_html=True)
                 
                 df_display_mx = ligie_filtrado[['Código', 'Fracción', 'Tasa General']].copy()
                 df_display_mx.columns = ['Código', 'Descripción', 'Arancel']
@@ -389,31 +404,29 @@ if st.sidebar.button("Buscar") or hs6_input:
                         show_hierarchy_item("Subheading", row.get('Subheading'))
                 except: pass
 
-                # --- WIZARD 232 (Diseño NAFIN) ---
+                # --- NUEVA LÓGICA DE PARSEO HTS ---
+                parsed_duties = hts_filtrado['General'].apply(parse_hts_duties)
+                hts_filtrado['Math Base Duty'] = parsed_duties.apply(lambda x: x[0])
+                hts_filtrado['General Duty'] = parsed_duties.apply(lambda x: x[1])
+                hts_filtrado['Fixed Duty'] = parsed_duties.apply(lambda x: x[2])
+
                 wizard_queue = []
                 unique_hts_codes = hts_filtrado['Code'].unique()
-                
-                # Pre-calculamos la General Duty por código HTS aquí porque la necesitamos para la lógica Annex III
-                hts_filtrado['General Duty'] = hts_filtrado['General'].apply(clean_percentage)
-                
-                has_sec232_match = False  # BANDERA: Detecta si existe posibilidad de tocar la 232
+                has_sec232_match = False  
                 
                 for code in unique_hts_codes:
-                    # 1. Buscamos si tiene hijos de 10 dígitos
                     children = get_10digit_children(code, sec232_db, auxiliar)
                     if not children.empty:
-                        has_sec232_match = True  # Sí está en el radar de la 232
+                        has_sec232_match = True
                         possible_duties = children['Duty'].unique()
-                        # Si solo hay una opción y no es Annex III, lo asignamos directo
                         if len(possible_duties) == 1 and possible_duties[0] != "Annex III":
                             st.session_state.user_232_decisions[code] = possible_duties[0]
                         else:
                             wizard_queue.append({'hts_8': code, 'type': '10_digit', 'children_df': children})
                     else:
-                        # 2. Buscamos un match directo (8, 5 o 4 dígitos)
                         match_code, duty = get_direct_matches(code, sec232_db)
                         if match_code:
-                            has_sec232_match = True  # Sí está en el radar de la 232
+                            has_sec232_match = True
                             if duty == "Annex III":
                                 wizard_queue.append({'hts_8': code, 'type': 'annex_iii'})
                             else:
@@ -426,7 +439,6 @@ if st.sidebar.button("Buscar") or hs6_input:
                     current_task = wizard_queue[st.session_state.wizard_step]
                     current_hts = current_task['hts_8']
                     
-                    # Ficha unificada nativa para el Wizard 232
                     with st.expander("⚠️ Clasificación Requerida: Sección 232", expanded=st.session_state.wizard_expanded):
                         st.markdown("""
                         <div style='padding: 15px; background-color: #F8FAFC; border: 1px solid #E2E8F0; border-left: 5px solid #2596be; border-radius: 6px; margin-bottom: 20px;'>
@@ -456,7 +468,6 @@ if st.sidebar.button("Buscar") or hs6_input:
                             elif current_task['type'] == 'annex_iii':
                                 is_annex_iii = True
                             
-                            # Si es Annex III (directamente o tras elegir un 10 dígitos), mostramos la pregunta
                             if is_annex_iii:
                                 if current_task['type'] == '10_digit':
                                     st.markdown("<hr style='margin: 10px 0;'>", unsafe_allow_html=True)
@@ -464,10 +475,9 @@ if st.sidebar.button("Buscar") or hs6_input:
                                 st.markdown(f"**Fracción {current_hts} (Annex III):** ¿El metal fue fundido y moldeado en los Estados Unidos?")
                                 usa_melted = st.radio("Melted", ["No (Otro país)", "Sí, en Estados Unidos"], key=f"rad_annex_{current_hts}", label_visibility="collapsed")
                                 
-                                # Obtenemos el arancel base (General) para hacer la matemática
-                                base_duty = hts_filtrado[hts_filtrado['Code'] == current_hts]['General Duty'].iloc[0]
+                                # Extraemos la base de cálculo numérica en lugar de la representación visual
+                                base_duty = hts_filtrado[hts_filtrado['Code'] == current_hts]['Math Base Duty'].iloc[0]
                                 
-                                # REGLA DE NEGOCIO CORREGIDA: Annex III
                                 if usa_melted == "Sí, en Estados Unidos":
                                     if base_duty < 10.0:
                                         calc_duty = 10.0 - base_duty
@@ -514,7 +524,6 @@ if st.sidebar.button("Buscar") or hs6_input:
                             
                             st.markdown(f"<p style='text-align: center; color: #64748B; font-size: 0.85rem; margin-top: 10px;'>Fracción {st.session_state.wizard_step + 1} de {len(wizard_queue)}</p>", unsafe_allow_html=True)
 
-                # --- TABLA USA Y MÉTRICA FINAL ---
                 hts_filtrado = hts_filtrado.merge(sec301[['Code', 'Duty']], left_on='Code', right_on='Code', how='left')
                 hts_filtrado.rename(columns={'Duty': '301 Duty'}, inplace=True)
                 hts_filtrado['301 Duty'] = hts_filtrado['301 Duty'].fillna(0.0)
@@ -522,15 +531,11 @@ if st.sidebar.button("Buscar") or hs6_input:
 
                 def calculate_232_row(row):
                     code = row['Code']
-                    # 1. Checamos si el usuario ya tomó y guardó la decisión en pasos anteriores
                     if code in st.session_state.user_232_decisions:
                         return st.session_state.user_232_decisions[code]
-                    
-                    # NUEVO: 1.5 Reflejamos "en vivo" la selección temporal del paso actual del Wizard
                     if wizard_queue and code == current_hts:
                         return duty_result
                     
-                    # 2. Si no pasó por el wizard o es de otra fracción, aplicamos el match directo
                     match_code, duty = get_direct_matches(code, sec232_db)
                     if match_code and duty != "Annex III":
                         return duty
@@ -538,14 +543,30 @@ if st.sidebar.button("Buscar") or hs6_input:
 
                 hts_filtrado['232 Duty'] = hts_filtrado.apply(calculate_232_row, axis=1)
                 
+                # --- NUEVA LÓGICA TOTAL DUTY ADAPTATIVA ---
                 def calc_total_row(row):
-                    base_sum = row['General Duty'] + row['301 Duty']
-                    duty_232_val = row['232 Duty']
-                    try:
-                        d232_float = float(duty_232_val)
-                        return base_sum + d232_float
-                    except:
-                        return f"{base_sum:.2f}% + {duty_232_val}"
+                    math_base = row['Math Base Duty']
+                    
+                    try: sec232 = float(row['232 Duty'])
+                    except: sec232 = 0.0
+                    
+                    try: sec301 = float(row['301 Duty'])
+                    except: sec301 = 0.0
+                        
+                    sum_pct = math_base + sec232 + sec301
+                    fixed = row['Fixed Duty']
+                    
+                    # Si contiene Fixed, empaquetamos el componente porcentual entre paréntesis.
+                    if pd.notna(fixed) and fixed:
+                        if sum_pct > 0:
+                            return f"{fixed} + {sum_pct:.2f}%"
+                        else:
+                            return fixed
+                    else:
+                        # Si no hay Fixed pero es 'Free' y no aplica ninguna otra tarifa
+                        if str(row['General Duty']).lower() == 'free' and sum_pct == 0:
+                            return "Free"
+                        return f"{sum_pct:.2f}%"
 
                 hts_filtrado['Total Duty'] = hts_filtrado.apply(calc_total_row, axis=1)
                 
@@ -555,24 +576,25 @@ if st.sidebar.button("Buscar") or hs6_input:
                         return f"{v:.2f}%"
                     except: return str(val)
 
-                numeric_totals = pd.to_numeric(hts_filtrado['Total Duty'], errors='coerce')
-                avg_total_duty = numeric_totals.mean()
-
-                st.markdown(f"""
-                <div class="metric-container" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; border-top: 4px solid #2596be;">
-                    <div class="metric-title" style="margin-bottom: 0;">Arancel Promedio HTS</div>
-                    <div class="metric-value" style="margin: 0; font-size: 1.7rem;">{avg_total_duty:,.2f}% <span class='bandera' style='font-size: 1.3rem;'>🇨🇳</span></div>
-                </div>
-                """, unsafe_allow_html=True)
-
                 if hts_filtrado['is_tmec'].any():
                     st.info("📄 Los registros marcados en verde representan fracciones incluidas en el TMEC.")
                 
-                # --- LÓGICA DE VISIBILIDAD DE COLUMNAS ---
-                cols_final = ['Code', 'Description', 'General Duty', '301 Duty']
-                format_dict = {'General Duty': '{:.2f}%', '301 Duty': '{:.2f}%', 'Total Duty': smart_pct}
+                # --- COLUMNAS DINÁMICAS ---
+                cols_final = ['Code', 'Description']
+                format_dict = {'301 Duty': '{:.2f}%'}
                 
-                # Mostramos la columna 232 si el código tocó la base de datos (incluso si resultó en 0%)
+                if hts_filtrado['General Duty'].notna().any():
+                    cols_final.append('General Duty')
+                if hts_filtrado['Fixed Duty'].notna().any():
+                    cols_final.append('Fixed Duty')
+                
+                # --- NUEVO CÓDIGO: Reemplazar "None" por texto vacío ---
+                hts_filtrado['General Duty'] = hts_filtrado['General Duty'].fillna("")
+                hts_filtrado['Fixed Duty'] = hts_filtrado['Fixed Duty'].fillna("")
+                # -------------------------------------------------------
+                
+                cols_final.append('301 Duty')
+                
                 if has_sec232_match:
                     cols_final.append('232 Duty')
                     format_dict['232 Duty'] = smart_pct
@@ -592,14 +614,11 @@ if st.sidebar.button("Buscar") or hs6_input:
                 st.markdown("<hr style='border-color: #E2E8F0; margin-top: 30px;'>", unsafe_allow_html=True)
                 st.markdown(f"<h3 style='color: #0F172A;'>Desempeño Histórico: México vs {target_country}</h3>", unsafe_allow_html=True)
                 
-                # FIX: Usamos startswith en lugar de coincidencia exacta y agrupamos para evitar duplicados en la gráfica
                 code_match = str(hs6_input).strip()
                 
-                # Filtrar asegurando tipo string y buscando todo lo que empiece con la subpartida
                 df_part_sub = part[part['Subpartida'].astype(str).str.startswith(code_match)].copy()
                 df_aranceles_sub = aranceles[aranceles['Subpartida'].astype(str).str.startswith(code_match)].copy()
 
-                # Agrupar datos si se atraparon múltiples fracciones hijas
                 if not df_part_sub.empty:
                     df_part_sub = df_part_sub.groupby('Date', as_index=False).sum(numeric_only=True).sort_values('Date')
                 
@@ -649,15 +668,12 @@ if st.sidebar.button("Buscar") or hs6_input:
                         for col in ['Mexico', 'Total', 'China', 'participacion_mexico', 'participacion_china']:
                             if col in df_part_sub.columns:
                                 df_part_sub[col] = pd.to_numeric(df_part_sub[col], errors='coerce')
-                        
-                        # Las columnas de participación ya vienen pre-calculadas en la BD, nos saltamos ese cálculo
 
                         if 'Mexico' in df_part_sub.columns:
                             money_last_mx, money_avg_mx, money_date_mx = get_series_stats(df_part_sub, 'Mexico')
                         if 'China' in df_part_sub.columns:
                             money_last_ch, money_avg_ch, money_date_ch = get_series_stats(df_part_sub, 'China')
                         
-                        # Usamos los nombres de las nuevas columnas
                         if 'participacion_mexico' in df_part_sub.columns:
                             share_last_mx, share_avg_mx, share_date_mx = get_series_stats(df_part_sub, 'participacion_mexico')
                         if 'participacion_china' in df_part_sub.columns:
@@ -666,7 +682,6 @@ if st.sidebar.button("Buscar") or hs6_input:
                     if rows_ara:
                         for col in ['Mexico', 'China']:
                             if col in df_aranceles_sub.columns:
-                                # Convertimos a numérico directo, ya vienen en % (escala 0-100+)
                                 df_aranceles_sub[col] = pd.to_numeric(df_aranceles_sub[col], errors='coerce')
                         
                         if 'Mexico' in df_aranceles_sub.columns:
@@ -730,7 +745,6 @@ if st.sidebar.button("Buscar") or hs6_input:
                     def plot_altair_chart(chart_data, palette, y_title):
                         df_melted = chart_data.reset_index().melt('Date', var_name='País', value_name='Valor')
                         
-                        # Se eliminó el atributo "point" para dejar solo la línea limpia
                         chart = alt.Chart(df_melted).mark_line(
                             strokeWidth=3,
                             interpolate='linear'
@@ -788,7 +802,6 @@ if st.sidebar.button("Buscar") or hs6_input:
                             st.markdown("<div class='chart-card-mx'></div>", unsafe_allow_html=True)
                             st.markdown("<div style='color: #0F172A; font-weight: 800; font-size: 1.1rem; margin-bottom: 15px;'>Participación de Mercado (%)</div>", unsafe_allow_html=True)
                             if rows_part:
-                                # Reemplazamos los nombres de columnas para que apunten a las nuevas
                                 chart_data, palette = prepare_chart_data(df_part_sub, 'participacion_mexico', 'participacion_china', "México", target_country)
                                 if not chart_data.dropna(how='all').empty:
                                     plot_altair_chart(chart_data, palette, '% Participación')
