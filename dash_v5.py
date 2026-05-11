@@ -506,7 +506,7 @@ if hs6_input:
         # MÓDULO MÉXICO
         # =====================================================================
         if apply_mx:
-            st.markdown("<h2 style='color: #0F172A;'><span class='bandera'>🇲🇽</span> México</h2>", unsafe_allow_html=True)
+            st.markdown("<h2 style='color: #0F172A;'><span class='bandera'>🇲🇽</span> Marco Arancelario de México</h2>", unsafe_allow_html=True)
             if 'Código' in ligie.columns:
                 ligie_filtrado = ligie[ligie['Código'].str.startswith(hs6_input)].copy()
             else: ligie_filtrado = pd.DataFrame()
@@ -553,7 +553,7 @@ if hs6_input:
         # MÓDULO ESTADOS UNIDOS
         # =====================================================================
         if apply_us:
-            st.markdown("<h2 style='color: #0F172A;'><span class='bandera'>🇺🇸</span> Estados Unidos</h2>", unsafe_allow_html=True)
+            st.markdown("<h2 style='color: #0F172A;'><span class='bandera'>🇺🇸</span> Marco Arancelario de Estados Unidos</h2>", unsafe_allow_html=True)
             
             if 'Code' in hts.columns:
                 hts_filtrado = hts[hts['Code'].str.startswith(hs6_input)].copy()
@@ -894,7 +894,7 @@ if hs6_input:
                 # 3. RENDERIZADO EN LA INTERFAZ
                 # ---------------------------------------------------------------------
                 
-                st.markdown("<h3 style='color: #0F172A; margin-top: 0px; margin-bottom: 10px; font-size: 1.4rem;'>Resumen Aranceles a China <span class='bandera'>🇨🇳</span></h3>", unsafe_allow_html=True)
+                st.markdown("<h3 style='color: #0F172A; margin-top: 0px; margin-bottom: 10px; font-size: 1.4rem;'>Aranceles a China <span class='bandera'>🇨🇳</span></h3>", unsafe_allow_html=True)
                 
                 # Tabla China: Sin highlight TMEC, con wraptext garantizado en 'Description'
                 # --- RENDER TABLA CHINA 🇨🇳 ---
@@ -916,7 +916,7 @@ if hs6_input:
                 st.markdown(f"<div class='card-hover' style='padding: 10px 20px 0px 20px; margin-bottom: 15px; border-top: 4px solid #008889;'>{html_china}</div>", unsafe_allow_html=True)
 
                 # --- RENDER TABLA MÉXICO 🇲🇽 ---
-                st.markdown("<h3 style='color: #0F172A; margin-top: 10px; margin-bottom: 5px; font-size: 1.4rem;'>Resumen Aranceles a México <span class='bandera'>🇲🇽</span></h3>", unsafe_allow_html=True)
+                st.markdown("<h3 style='color: #0F172A; margin-top: 10px; margin-bottom: 5px; font-size: 1.4rem;'>Aranceles a México <span class='bandera'>🇲🇽</span></h3>", unsafe_allow_html=True)
                 
                 cols_to_center_mexico = [c for c in cols_mexico if c not in ['Code', 'Description']]
                 width_mexico_aranceles = f"{45 / len(cols_to_center_mexico):.1f}%" if cols_to_center_mexico else "45%"
