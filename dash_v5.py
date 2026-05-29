@@ -774,9 +774,6 @@ if hs6_input:
                 # ---------------------------------------------------------------------
                 hts_mexico = hts_filtrado.copy()
                 
-                # REGLA TMEC: Si entra por TMEC, inyectamos 0% en Sec 232
-                hts_mexico.loc[hts_mexico['is_tmec'] == True, '232 Duty'] = 0.0
-                
                 # --- LÓGICA V5 CORREGIDA: EVITAR PÉRDIDA DE COLUMNA 'Code' ---
                 tmec_temp = tmec[['Code', 'Duty']].copy()
                 
