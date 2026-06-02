@@ -331,6 +331,9 @@ def load_data(target_country="China"):
 
     semi_db = normalize_cols(pd.read_parquet(f'{base_path}semi.parquet'))
     if 'code' in semi_db.columns: semi_db = clean_numeric_code(semi_db, 'code')
+    semi_db.rename(columns={'code': 'Code', 'duty': 'Duty'}, inplace=True)
+    if 'Duty' in semi_db.columns:
+        semi_db['Duty'] = semi_db['Duty'].apply(clean_percentage)
 
     return ligie, hts, sec301, metals_db, tmec, part, aranceles, auxiliar, sec122, auto_db, mhdv_db, wood_db, semi_db
 
@@ -411,6 +414,24 @@ def get_wood_match(hts_8, wood_db):
             category = matches.iloc[0].get('Category', '')
             return sub, duty, category
     return None, 0.0, None
+
+def get_semi_match(hts_code, semi_db):
+    """Búsqueda jerárquica en semi.parquet (códigos a 6 dígitos).
+    Cubre: match exacto, búsqueda hacia arriba (HTS → prefijo 6d) y
+    búsqueda hacia abajo (código semi es prefijo del HTS)."""
+    hts_str = str(hts_code).strip()
+    # Exacto y hacia arriba (10 → 4 dígitos del HTS)
+    for length in [10, 8, 7, 6, 5, 4]:
+        sub = hts_str[:length]
+        matches = semi_db[semi_db['Code'] == sub]
+        if not matches.empty:
+            return sub, float(matches.iloc[0].get('Duty', 0.0))
+    # Hacia abajo: el código semi es más largo que el prefijo HTS ingresado
+    for _, row in semi_db.iterrows():
+        s_code = str(row['Code']).strip()
+        if s_code.startswith(hts_str):
+            return s_code, float(row.get('Duty', 0.0))
+    return None, 0.0
 
 # -----------------------------------------------------------------------------
 # 4. INTERFAZ
@@ -623,6 +644,7 @@ if 'user_tmec_auto_decisions' not in st.session_state: st.session_state.user_tme
 if 'user_mhdv_decisions' not in st.session_state: st.session_state.user_mhdv_decisions = {}
 if 'user_tmec_mhdv_decisions' not in st.session_state: st.session_state.user_tmec_mhdv_decisions = {}
 if 'user_wood_decisions' not in st.session_state: st.session_state.user_wood_decisions = {}
+if 'user_semi_decisions' not in st.session_state: st.session_state.user_semi_decisions = {}
 if 'last_search' not in st.session_state: st.session_state.last_search = ""
 if 'wizard_expanded' not in st.session_state: st.session_state.wizard_expanded = True
 if 'wizard_close_trigger' not in st.session_state: st.session_state.wizard_close_trigger = 0
@@ -637,6 +659,7 @@ if hs6_input != st.session_state.last_search:
     st.session_state.user_mhdv_decisions = {}
     st.session_state.user_tmec_mhdv_decisions = {}
     st.session_state.user_wood_decisions = {}
+    st.session_state.user_semi_decisions = {}
     st.session_state.wizard_expanded = True
     st.session_state.wizard_close_trigger = 0
 
@@ -735,7 +758,7 @@ if hs6_input:
                 
                 for code in unique_hts_codes:
                     # Inicializamos la estructura para cada código
-                    wizard_queue_dict[code] = {'hts_8': code, 'metals_task': None, 'sec122_task': None, 'auto_task': None, 'tmec_auto_task': None, 'mhdv_task': None, 'tmec_mhdv_task': None, 'wood_task': None}
+                    wizard_queue_dict[code] = {'hts_8': code, 'metals_task': None, 'sec122_task': None, 'auto_task': None, 'tmec_auto_task': None, 'mhdv_task': None, 'tmec_mhdv_task': None, 'wood_task': None, 'semi_task': None}
                     
                     # --- LÓGICA COLA WIZARD PARA METALES ---
                     children = get_10digit_children(code, metals_db, auxiliar)
@@ -893,8 +916,13 @@ if hs6_input:
                             else:
                                 st.session_state.user_wood_decisions[code] = {'duty': wood_duty, 'category': wood_cat}
 
+                # --- LÓGICA COLA WIZARD PARA SEMI (Semiconductors) ---
+                    match_semi_code, semi_duty = get_semi_match(code, semi_db)
+                    if match_semi_code:
+                        wizard_queue_dict[code]['semi_task'] = {'type': 'direct', 'duty': semi_duty}
+
                 # Construimos la cola final filtrando solo los códigos que requieran interacción
-                wizard_queue = [v for v in wizard_queue_dict.values() if v['metals_task'] or v['sec122_task'] or v['auto_task'] or v['tmec_auto_task'] or v['mhdv_task'] or v['tmec_mhdv_task'] or v['wood_task']]
+                wizard_queue = [v for v in wizard_queue_dict.values() if v['metals_task'] or v['sec122_task'] or v['auto_task'] or v['tmec_auto_task'] or v['mhdv_task'] or v['tmec_mhdv_task'] or v['wood_task'] or v['semi_task']]
                 
                 if wizard_queue:
                     if st.session_state.wizard_step >= len(wizard_queue):
@@ -909,11 +937,12 @@ if hs6_input:
                     mhdv_task = current_item['mhdv_task']
                     tmec_mhdv_task = current_item['tmec_mhdv_task']
                     wood_task = current_item['wood_task']
+                    semi_task = current_item['semi_task']
                     
                     trigger_spaces = " " * st.session_state.get('wizard_close_trigger', 0)
                     
                     # Títulos dinámicos basados en la concurrencia de tareas
-                    tasks_count = sum([1 for t in [metals_task, sec122_task, auto_task, tmec_auto_task, mhdv_task, tmec_mhdv_task, wood_task] if t])
+                    tasks_count = sum([1 for t in [metals_task, sec122_task, auto_task, tmec_auto_task, mhdv_task, tmec_mhdv_task, wood_task, semi_task] if t])
                     if tasks_count > 1:
                         w_title_base = "⚠️ Clasificación Requerida: Múltiples Secciones"
                         w_msg = "Este producto requiere validación múltiple. Seleccione las características correspondientes."
@@ -930,6 +959,10 @@ if hs6_input:
                         w_title_base = "⚠️ Clasificación Requerida: Autopartes TMEC"
                         w_msg = "Determine si su producto cumple con las reglas de origen específicas para autopartes TMEC."
                         w_color = "#10b981"
+                    elif semi_task:
+                        w_title_base = "⚠️ Clasificación Requerida: Sec 232 (Semiconductors)"
+                        w_msg = "Determine si el semiconductor o sus derivados están sujetos al arancel de la Sección 232."
+                        w_color = "#6366f1"
                     else:
                         w_title_base = "⚠️ Clasificación Requerida: Metales (Acero, Aluminio, Cobre)"
                         w_msg = "Seleccione las características del producto para determinar el arancel de metales aplicable."
@@ -959,9 +992,11 @@ if hs6_input:
                         show_tmec_mhdv_card = False
                         duty_wood_result = 0.0
                         cat_wood_result = ""
+                        duty_semi_result = 0.0
                         
                         with col_wiz_1:
                             has_previous_question = False
+                            product_claimed_by = None # NUEVO: Controlador de jerarquía Sec 232
                             
                             # --- 1. PREGUNTA UNIFICADA A 10 DÍGITOS ---
                             shared_children_df = None
@@ -971,6 +1006,10 @@ if hs6_input:
                                 shared_children_df = sec122_task['children_df']
                             elif auto_task and auto_task.get('type') == '10_digit' and not auto_task['children_df'].empty:
                                 shared_children_df = auto_task['children_df']
+                            elif mhdv_task and mhdv_task.get('type') == '10_digit' and not mhdv_task['children_df'].empty:
+                                shared_children_df = mhdv_task['children_df']
+                            elif wood_task and wood_task.get('type') == '10_digit' and not wood_task['children_df'].empty:
+                                shared_children_df = wood_task['children_df']
 
                             shared_selected_desc = None
                             if shared_children_df is not None:
@@ -979,91 +1018,43 @@ if hs6_input:
                                 shared_selected_desc = st.radio("L_shared", descriptions, key=f"rad_shared_10_{current_hts}", label_visibility="collapsed")
                                 has_previous_question = True
 
-                            # --- 2. EVALUACIÓN DE METALES ---
-                            if metals_task:
-                                active_annex = None
-                                pre_duty = None
-                                
-                                if metals_task['type'] == '10_digit':
-                                    children_df = metals_task['children_df']
-                                    row_match = children_df[children_df['Description'] == shared_selected_desc]
-                                    if not row_match.empty:
-                                        selected_code = row_match.iloc[0]['Code']
-                                        
-                                        # Utilizamos la búsqueda jerárquica para heredar el arancel desde bases superiores
-                                        match_code, duty_val = get_direct_matches(selected_code, metals_db)
-                                        
-                                        if match_code:
-                                            if duty_val in [50.0, 25.0, "Annex III"]:
-                                                active_annex = duty_val
-                                            else:
-                                                pre_duty = duty_val
-                                
-                                elif metals_task['type'] == 'annex':
-                                    active_annex = metals_task['annex_type']
-                                    
-                                elif metals_task.get('type') == 'fixed_outside':
-                                    pre_duty = metals_task['duty']
-                                    
-                                is_outside_ch = str(current_hts)[:2] not in ['72', '73', '74', '76']
-                                meets_15_pct = "Sí"
-                                needs_15_pct_check = is_outside_ch and (active_annex is not None or (pre_duty is not None and pre_duty not in [0.0, "0", "0.0"]))
-                                
-                                if needs_15_pct_check:
-                                    if has_previous_question: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
-                                    st.markdown(f"**Metales (Fracción {current_hts}):** ¿Cuál es el peso conjunto de Acero, Aluminio y/o Cobre en el producto?")
-                                    meets_15_pct = st.radio("15pct", ["Menor al 15%", "Igual o mayor al 15%"], key=f"rad_15_{current_hts}", label_visibility="collapsed")
-                                    has_previous_question = True
-                                    
-                                if meets_15_pct == "Menor al 15%":
-                                    duty_metals_result = 0.0
-                                else:
-                                    if pre_duty is not None:
-                                        duty_metals_result = pre_duty
-                                        
-                                    if active_annex is not None:
-                                        is_motorcycle_eligible = active_annex == 25.0 and str(current_hts)[:2] in ['84', '85', '87']
-                                        is_for_motorcycles = "No"
-    
-                                        if is_motorcycle_eligible:
-                                            if has_previous_question and not needs_15_pct_check: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
-                                            st.markdown(f"**Metales (Fracción {current_hts}):** ¿El producto será usado exclusivamente en la manufactura de motocicletas?")
-                                            is_for_motorcycles = st.radio("Moto", ["No", "Sí"], key=f"rad_moto_{current_hts}", label_visibility="collapsed")
-                                            has_previous_question = True
-                                            
-                                        if is_for_motorcycles == "Sí":
-                                            calc_duty = 0.0
-                                        else:
-                                            if has_previous_question and not is_motorcycle_eligible and not needs_15_pct_check: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
-                                            st.markdown(f"**Metales (Fracción {current_hts}):** ¿Que porcentaje del metal fue fundido y moldeado en los Estados Unidos?")
-                                            usa_melted = st.radio("Melted", ["Menos de 95%", "Igual o mayor a 95%"], key=f"rad_annex_{current_hts}", label_visibility="collapsed")
-                                            has_previous_question = True
-                                            
-                                            base_duty = hts_filtrado[hts_filtrado['Code'] == current_hts]['Math Base'].iloc[0]
-                                            
-                                            if active_annex == "Annex III":
-                                                if usa_melted == "Igual o mayor a 95%":
-                                                    calc_duty = max(0.0, 10.0 - base_duty)
-                                                else:
-                                                    calc_duty = max(0.0, 15.0 - base_duty)
-                                            elif active_annex == 50.0:
-                                                if usa_melted == "Igual o mayor a 95%":
-                                                    calc_duty = 10.0
-                                                else:
-                                                    calc_duty = 50.0
-                                            elif active_annex == 25.0:
-                                                if usa_melted == "Igual o mayor a 95%":
-                                                    calc_duty = 10.0
-                                                else:
-                                                    calc_duty = 25.0
-                                        
-                                        duty_metals_result = calc_duty
+                            # --- 2. EVALUACIÓN DE SEMI (Jerarquía 1) ---
+                            if semi_task:
+                                temp_semi_duty = semi_task.get('duty', 0.0)
+                                if has_previous_question: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
 
-                            # --- 3. EVALUACIÓN DE AUTOS (USA) ---
-                            if auto_task:
+                                st.markdown(
+                                    f"**Sec 232 Semiconductors (Fracción {current_hts}):** "
+                                    f"¿El semiconductor o sus derivados cumplen con alguna de las siguientes características?\n\n"
+                                    f"&nbsp;&nbsp;&nbsp;**a.** TPP mayor a 14,000 y menor a 17,500, con DRAM mayor a 4,500 GB/s y menor a 5,000 GB/s.\n\n"
+                                    f"&nbsp;&nbsp;&nbsp;**b.** TPP mayor a 20,800 y menor a 21,100, con DRAM mayor a 5,800 GB/s y menor a 6,200 GB/s."
+                                )
+                                ans_semi_specs = st.radio("semi_specs", ["No", "Sí"], key=f"rad_semi_specs_{current_hts}", label_visibility="collapsed")
+                                has_previous_question = True
+
+                                if ans_semi_specs == "Sí":
+                                    product_claimed_by = 'Semi'
+                                    st.markdown(
+                                        f"**Sec 232 Semiconductors (Fracción {current_hts}):** "
+                                        f"¿El producto será destinado a alguno de los siguientes usos en EUA?\n\n"
+                                        f"&nbsp;&nbsp;&nbsp;**a.** Centros de datos.\n\n"
+                                        f"&nbsp;&nbsp;&nbsp;**b.** Reemplazos o reparaciones.\n\n"
+                                        f"&nbsp;&nbsp;&nbsp;**c.** Investigación y desarrollo.\n\n"
+                                        f"&nbsp;&nbsp;&nbsp;**d.** Uso de startups.\n\n"
+                                        f"&nbsp;&nbsp;&nbsp;**e.** Aplicaciones de consumo no destinadas a centros de datos.\n\n"
+                                        f"&nbsp;&nbsp;&nbsp;**f.** Aplicaciones industriales civiles no destinadas a centros de datos.\n\n"
+                                        f"&nbsp;&nbsp;&nbsp;**g.** Aplicaciones en el sector público."
+                                    )
+                                    ans_semi_use = st.radio("semi_use", ["No", "Sí"], key=f"rad_semi_use_{current_hts}", label_visibility="collapsed")
+                                    if ans_semi_use == "Sí": duty_semi_result = 0.0
+                                    else: duty_semi_result = temp_semi_duty
+                                else:
+                                    duty_semi_result = 0.0
+
+                            # --- 3. EVALUACIÓN DE AUTOS & TMEC (Jerarquía 2) ---
+                            if auto_task and not product_claimed_by:
                                 temp_auto_duty = 0.0
                                 temp_auto_cat = ""
-                                
                                 if auto_task.get('type') == '10_digit':
                                     children_df = auto_task.get('children_df')
                                     if children_df is not None and not children_df.empty and shared_selected_desc:
@@ -1080,7 +1071,6 @@ if hs6_input:
 
                                 if temp_auto_cat:
                                     if has_previous_question: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
-                                    
                                     clean_cat = str(temp_auto_cat).strip().lower()
                                     if clean_cat == 'automobile':
                                         st.markdown(f"**Sec 232 Autos (Fracción {current_hts}):** ¿El artículo se identifica con la siguiente descripción?\n\n*Passenger vehicles (sedans, sport utility vehicles, crossover utility vehicles, minivans and cargo vans) and light trucks.*")
@@ -1091,97 +1081,40 @@ if hs6_input:
                                     has_previous_question = True
                                     
                                     if ans_auto_val == "Sí":
-                                        st.markdown(f"**Sec 232 Autos (Fracción {current_hts}):** ¿El vehículo es antiguo (25 años o más desde su año de fabricación)?")
-                                        ans_auto_antiguo = st.radio("auto_antiguo", ["No", "Sí"], key=f"rad_auto_antiguo_{current_hts}", label_visibility="collapsed")
-                                        has_previous_question = True
-                                        
-                                        if ans_auto_antiguo == "Sí":
-                                            duty_auto_result = 0.0
-                                            cat_auto_result = ""
+                                        product_claimed_by = 'Auto'
+                                        # Antigüedad solo si NO es autoparte
+                                        if clean_cat == 'automobile':
+                                            st.markdown(f"**Sec 232 Autos (Fracción {current_hts}):** ¿El vehículo es antiguo (25 años o más desde su año de fabricación)?")
+                                            ans_auto_antiguo = st.radio("auto_antiguo", ["No", "Sí"], key=f"rad_auto_antiguo_{current_hts}", label_visibility="collapsed")
+                                            if ans_auto_antiguo == "Sí":
+                                                duty_auto_result = 0.0
+                                                cat_auto_result = ""
+                                            else:
+                                                duty_auto_result = temp_auto_duty
+                                                cat_auto_result = temp_auto_cat
                                         else:
                                             duty_auto_result = temp_auto_duty
                                             cat_auto_result = temp_auto_cat
+                                            
+                                            # Evaluación TMEC pegada a la confirmación de Autoparte
+                                            is_code_tmec = current_hts in tmec_codes_clean_list
+                                            if is_code_tmec:
+                                                show_tmec_auto_card = True
+                                                st.markdown(f"**Autopartes TMEC (Fracción {current_hts}):** ¿Su producto corresponde a *automobile knock-down kits or parts compilations*?")
+                                                ans_kd = st.radio("kd_auto", ["No", "Sí"], key=f"rad_kd_{current_hts}", label_visibility="collapsed")
+                                                if ans_kd == "Sí": duty_tmec_auto_result = duty_auto_result
+                                                else: duty_tmec_auto_result = 0.0
                                     else:
                                         duty_auto_result = 0.0
                                         cat_auto_result = ""
+                            elif auto_task:
+                                duty_auto_result = 0.0
+                                cat_auto_result = ""
 
-                            # --- 4. EVALUACIÓN DE SEC 122 ---
-                            if sec122_task:
-                                scope_val = sec122_task.get('scope', '')
-                                desc_val = sec122_task.get('desc', '')
-                                
-                                # Si el usuario confirmó que ES un auto explícitamente, la Sec 122 es 0.0 automático
-                                if auto_task and cat_auto_result != "":
-                                    duty_sec122_result = 0.0
-                                else:
-                                    # 1. EVALUAMOS PRIMERO LAS EXENCIONES A 10 DÍGITOS EN TODAS LAS BASES (Auto, MHDV, Wood, Semi)
-                                    is_exempt_by_10_digit = False
-                                    eval_code = current_hts
-                                    
-                                    if shared_children_df is not None and shared_selected_desc:
-                                        row_match = shared_children_df[shared_children_df['Description'] == shared_selected_desc]
-                                        if not row_match.empty:
-                                            eval_code = row_match.iloc[0]['Code']
-                                            
-                                    # Usamos la base consolidada exc_122_db que ya contiene las 4 bases de exención
-                                    if not exc_122_db.empty:
-                                        alt_exc, _ = get_direct_matches(eval_code, exc_122_db)
-                                        if alt_exc:
-                                            is_exempt_by_10_digit = True
-
-                                    # 2. APLICAMOS LÓGICA: Si está exento por 10 dígitos en cualquier base, no preguntamos nada más
-                                    if is_exempt_by_10_digit:
-                                        duty_sec122_result = 0.0
-                                    else:
-                                        # 3. Si NO está exento, lanzamos la pregunta de aeronaves/'ex' si el scope lo requiere
-                                        if 'ex' in scope_val or 'aircraft' in scope_val:
-                                            if has_previous_question: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
-                                            if 'ex' in scope_val:
-                                                st.markdown(f"**Sec 122 (Fracción {current_hts}):** ¿Su producto corresponde **exactamente** a la siguiente descripción?")
-                                                st.info(desc_val)
-                                            else: 
-                                                st.markdown(f"**Sec 122 (Fracción {current_hts}):** ¿El producto consiste en partes, componentes o ensamblajes de aeronaves civiles?")
-                                                
-                                            ans_scope = st.radio("sec122_air", ["No", "Sí"], key=f"rad_122_scope_{current_hts}", label_visibility="collapsed")
-                                            has_previous_question = True
-                                            
-                                            if ans_scope == "Sí":
-                                                duty_sec122_result = 0.0
-                                            else:
-                                                duty_sec122_result = 10.0
-                                        else:
-                                            duty_sec122_result = 10.0
-
-                            # --- 5. EVALUACIÓN TMEC (KNOCK-DOWN KITS) ---
-                            eff_auto_duty = 0.0
-                            eff_auto_cat = ""
-                            if auto_task:
-                                eff_auto_duty = duty_auto_result
-                                eff_auto_cat = cat_auto_result
-                            elif tmec_auto_task:
-                                eff_auto_duty = tmec_auto_task['duty']
-                                eff_auto_cat = tmec_auto_task['category']
-                            elif current_hts in st.session_state.user_auto_decisions:
-                                eff_auto_duty = st.session_state.user_auto_decisions[current_hts]['duty']
-                                eff_auto_cat = st.session_state.user_auto_decisions[current_hts]['category']
-
-                            is_code_tmec = current_hts in tmec_codes_clean_list
-                            if is_code_tmec and str(eff_auto_cat).strip().lower() == 'autoparts':
-                                show_tmec_auto_card = True
-                                if has_previous_question: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
-                                st.markdown(f"**Autopartes TMEC (Fracción {current_hts}):** ¿Su producto corresponde a *automobile knock-down kits or parts compilations*?")
-                                ans_kd = st.radio("kd_auto", ["No", "Sí"], key=f"rad_kd_{current_hts}", label_visibility="collapsed")
-                                has_previous_question = True
-                                if ans_kd == "Sí":
-                                    duty_tmec_auto_result = eff_auto_duty
-                                else:
-                                    duty_tmec_auto_result = 0.0
-
-                        # --- 6. EVALUACIÓN DE MHDV ---
-                            if mhdv_task:
+                            # --- 4. EVALUACIÓN DE MHDV & TMEC (Jerarquía 3) ---
+                            if mhdv_task and not product_claimed_by:
                                 temp_mhdv_duty = 0.0
                                 temp_mhdv_cat = ""
-
                                 if mhdv_task.get('type') == '10_digit':
                                     children_df = mhdv_task.get('children_df')
                                     if children_df is not None and not children_df.empty and shared_selected_desc:
@@ -1211,10 +1144,11 @@ if hs6_input:
                                     has_previous_question = True
 
                                     if ans_mhdv_val == "Sí":
+                                        product_claimed_by = 'MHDV'
+                                        # Antigüedad solo si NO es parte
                                         if clean_mhdv_cat in ['mhdv', 'buses']:
                                             st.markdown(f"**Sec 232 MHDV (Fracción {current_hts}):** ¿El vehículo es antiguo (25 años o más desde su año de fabricación)?")
                                             ans_mhdv_antiguo = st.radio("mhdv_antiguo", ["No", "Sí"], key=f"rad_mhdv_antiguo_{current_hts}", label_visibility="collapsed")
-                                            has_previous_question = True
                                             if ans_mhdv_antiguo == "Sí":
                                                 duty_mhdv_result = 0.0
                                                 cat_mhdv_result = ""
@@ -1224,39 +1158,87 @@ if hs6_input:
                                         else:
                                             duty_mhdv_result = temp_mhdv_duty
                                             cat_mhdv_result = temp_mhdv_cat
+                                            
+                                            # TMEC aplica a partes
+                                            is_code_tmec = current_hts in tmec_codes_clean_list
+                                            if is_code_tmec:
+                                                show_tmec_mhdv_card = True
+                                                st.markdown(f"**MHDV TMEC (Fracción {current_hts}):** ¿Su producto corresponde a *medium- and heavy-duty vehicle knock-down kits or parts compilations*?")
+                                                ans_kd_mhdv = st.radio("kd_mhdv", ["No", "Sí"], key=f"rad_kd_mhdv_{current_hts}", label_visibility="collapsed")
+                                                if ans_kd_mhdv == "Sí": duty_tmec_mhdv_result = duty_mhdv_result
+                                                else: duty_tmec_mhdv_result = 0.0
                                     else:
                                         duty_mhdv_result = 0.0
                                         cat_mhdv_result = ""
+                            elif mhdv_task:
+                                duty_mhdv_result = 0.0
+                                cat_mhdv_result = ""
 
-                            # --- 7. EVALUACIÓN TMEC MHDV (partes) ---
-                            eff_mhdv_duty = 0.0
-                            eff_mhdv_cat = ""
-                            if mhdv_task:
-                                eff_mhdv_duty = duty_mhdv_result
-                                eff_mhdv_cat = cat_mhdv_result
-                            elif tmec_mhdv_task:
-                                eff_mhdv_duty = tmec_mhdv_task['duty']
-                                eff_mhdv_cat = tmec_mhdv_task['category']
-                            elif current_hts in st.session_state.user_mhdv_decisions:
-                                eff_mhdv_duty = st.session_state.user_mhdv_decisions[current_hts]['duty']
-                                eff_mhdv_cat = st.session_state.user_mhdv_decisions[current_hts]['category']
-
-                            if is_code_tmec and str(eff_mhdv_cat).strip().lower() == 'parts':
-                                show_tmec_mhdv_card = True
-                                if has_previous_question: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
-                                st.markdown(f"**MHDV TMEC (Fracción {current_hts}):** ¿Su producto corresponde a *medium- and heavy-duty vehicle knock-down kits or parts compilations*?")
-                                ans_kd_mhdv = st.radio("kd_mhdv", ["No", "Sí"], key=f"rad_kd_mhdv_{current_hts}", label_visibility="collapsed")
-                                has_previous_question = True
-                                if ans_kd_mhdv == "Sí":
-                                    duty_tmec_mhdv_result = eff_mhdv_duty
+                            # --- 5. EVALUACIÓN DE METALES (Jerarquía 4) ---
+                            if metals_task and not product_claimed_by:
+                                active_annex = None
+                                pre_duty = None
+                                
+                                if metals_task['type'] == '10_digit':
+                                    children_df = metals_task['children_df']
+                                    row_match = children_df[children_df['Description'] == shared_selected_desc]
+                                    if not row_match.empty:
+                                        selected_code = row_match.iloc[0]['Code']
+                                        match_code, duty_val = get_direct_matches(selected_code, metals_db)
+                                        if match_code:
+                                            if duty_val in [50.0, 25.0, "Annex III"]: active_annex = duty_val
+                                            else: pre_duty = duty_val
+                                elif metals_task['type'] == 'annex': active_annex = metals_task['annex_type']
+                                elif metals_task.get('type') == 'fixed_outside': pre_duty = metals_task['duty']
+                                    
+                                is_outside_ch = str(current_hts)[:2] not in ['72', '73', '74', '76']
+                                meets_15_pct = "Sí"
+                                needs_15_pct_check = is_outside_ch and (active_annex is not None or (pre_duty is not None and pre_duty not in [0.0, "0", "0.0"]))
+                                
+                                if needs_15_pct_check:
+                                    if has_previous_question: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
+                                    st.markdown(f"**Metales (Fracción {current_hts}):** ¿Cuál es el peso conjunto de Acero, Aluminio y/o Cobre en el producto?")
+                                    meets_15_pct = st.radio("15pct", ["Menor al 15%", "Igual o mayor al 15%"], key=f"rad_15_{current_hts}", label_visibility="collapsed")
+                                    has_previous_question = True
+                                    
+                                if meets_15_pct == "Menor al 15%":
+                                    duty_metals_result = 0.0
                                 else:
-                                    duty_tmec_mhdv_result = 0.0
+                                    product_claimed_by = 'Metals'
+                                    if pre_duty is not None: duty_metals_result = pre_duty
+                                        
+                                    if active_annex is not None:
+                                        is_motorcycle_eligible = active_annex == 25.0 and str(current_hts)[:2] in ['84', '85', '87']
+                                        is_for_motorcycles = "No"
+    
+                                        if is_motorcycle_eligible:
+                                            if has_previous_question and not needs_15_pct_check: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
+                                            st.markdown(f"**Metales (Fracción {current_hts}):** ¿El producto será usado exclusivamente en la manufactura de motocicletas?")
+                                            is_for_motorcycles = st.radio("Moto", ["No", "Sí"], key=f"rad_moto_{current_hts}", label_visibility="collapsed")
+                                            has_previous_question = True
+                                            
+                                        if is_for_motorcycles == "Sí":
+                                            calc_duty = 0.0
+                                        else:
+                                            if has_previous_question and not is_motorcycle_eligible and not needs_15_pct_check: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
+                                            st.markdown(f"**Metales (Fracción {current_hts}):** ¿Que porcentaje del metal fue fundido y moldeado en los Estados Unidos?")
+                                            usa_melted = st.radio("Melted", ["Menos de 95%", "Igual o mayor a 95%"], key=f"rad_annex_{current_hts}", label_visibility="collapsed")
+                                            
+                                            base_duty = hts_filtrado[hts_filtrado['Code'] == current_hts]['Math Base'].iloc[0]
+                                            
+                                            if active_annex == "Annex III":
+                                                calc_duty = max(0.0, 10.0 - base_duty) if usa_melted == "Igual o mayor a 95%" else max(0.0, 15.0 - base_duty)
+                                            elif active_annex == 50.0:
+                                                calc_duty = 10.0 if usa_melted == "Igual o mayor a 95%" else 50.0
+                                            elif active_annex == 25.0:
+                                                calc_duty = 10.0 if usa_melted == "Igual o mayor a 95%" else 25.0
+                                        
+                                        duty_metals_result = calc_duty
 
-                        # --- 8. EVALUACIÓN DE WOOD ---
-                            if wood_task:
+                            # --- 6. EVALUACIÓN DE WOOD (Jerarquía 5) ---
+                            if wood_task and not product_claimed_by:
                                 temp_wood_duty = 0.0
                                 temp_wood_cat = ""
-
                                 if wood_task.get('type') == '10_digit':
                                     children_df = wood_task.get('children_df')
                                     if children_df is not None and not children_df.empty and shared_selected_desc:
@@ -1280,33 +1262,52 @@ if hs6_input:
                                         ans_wood_val = st.radio("wood_val", ["Sí", "No"], key=f"rad_wood_val_{current_hts}", label_visibility="collapsed")
                                         has_previous_question = True
                                         if ans_wood_val == "Sí":
+                                            product_claimed_by = 'Wood'
                                             duty_wood_result = temp_wood_duty
                                             cat_wood_result = temp_wood_cat
                                         else:
                                             duty_wood_result = 0.0
                                             cat_wood_result = ""
                                     else:
-                                        # softwood timber and lumber / upholstered wooden products:
-                                        # Si llegamos aquí desde un 10_digit, temp ya refleja el hijo seleccionado.
-                                        # Si es direct (hijos uniformes no-kitchen), el duty es correcto solo si
-                                        # el hijo seleccionado está en wood. Verificamos contra el hijo real.
                                         if wood_task.get('type') == '10_digit' and shared_selected_desc:
-                                            # ya resuelto arriba en temp_wood_duty/cat, aplica directo
                                             duty_wood_result = temp_wood_duty
                                             cat_wood_result = temp_wood_cat
                                         elif wood_task.get('type') == 'direct':
-                                            # Venimos sin selección de hijo: buscamos si el código 8d tiene match real
                                             duty_wood_result = temp_wood_duty
                                             cat_wood_result = temp_wood_cat
+                                            
+                                        if duty_wood_result > 0: product_claimed_by = 'Wood'
+
+                            # --- 7. EVALUACIÓN DE SEC 122 (Dependiente de Exclusiones) ---
+                            if sec122_task:
+                                scope_val = sec122_task.get('scope', '')
+                                desc_val = sec122_task.get('desc', '')
+                                
+                                # Si fue reclamado por jerarquías exentas (No-Metales), la Sec 122 no aplica
+                                if product_claimed_by in ['Auto', 'MHDV', 'Wood', 'Semi']:
+                                    duty_sec122_result = 0.0
+                                else:
+                                    if 'ex' in scope_val or 'aircraft' in scope_val:
+                                        if has_previous_question: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
+                                        if 'ex' in scope_val:
+                                            st.markdown(f"**Sec 122 (Fracción {current_hts}):** ¿Su producto corresponde **exactamente** a la siguiente descripción?")
+                                            st.info(desc_val)
+                                        else: 
+                                            st.markdown(f"**Sec 122 (Fracción {current_hts}):** ¿El producto consiste en partes, componentes o ensamblajes de aeronaves civiles?")
+                                            
+                                        ans_scope = st.radio("sec122_air", ["No", "Sí"], key=f"rad_122_scope_{current_hts}", label_visibility="collapsed")
+                                        if ans_scope == "Sí": duty_sec122_result = 0.0
+                                        else: duty_sec122_result = 10.0
+                                    else:
+                                        duty_sec122_result = 10.0
 
                         with col_wiz_2:
-                            # Renderizado dinámico de métricas según las tareas requeridas
-                            if metals_task:
+                            # Renderizado dinámico ocultando tarjetas excluidas por jerarquía
+                            if metals_task and product_claimed_by in [None, 'Metals']:
                                 try:
                                     dm_val = float(duty_metals_result)
                                     val_m_str = f"{dm_val:.2f}%"
-                                except:
-                                    val_m_str = str(duty_metals_result)
+                                except: val_m_str = str(duty_metals_result)
                                 st.markdown(f"""
                                 <div class="metric-container" style="padding: 10px; border-top: 4px solid #2596be; text-align: center; margin-bottom: 10px;">
                                     <div class="metric-title" style="margin-bottom: 5px;">Arancel Metales</div>
@@ -1314,12 +1315,11 @@ if hs6_input:
                                 </div>
                                 """, unsafe_allow_html=True)
                                 
-                            if sec122_task:
+                            if sec122_task and product_claimed_by in [None, 'Metals']:
                                 try:
                                     ds_val = float(duty_sec122_result)
                                     val_s_str = f"{ds_val:.2f}%"
-                                except:
-                                    val_s_str = str(duty_sec122_result)
+                                except: val_s_str = str(duty_sec122_result)
                                 st.markdown(f"""
                                 <div class="metric-container" style="padding: 10px; border-top: 4px solid #008889; text-align: center; margin-bottom: 15px;">
                                     <div class="metric-title" style="margin-bottom: 5px;">Arancel Sec 122</div>
@@ -1327,12 +1327,11 @@ if hs6_input:
                                 </div>
                                 """, unsafe_allow_html=True)
                                 
-                            if auto_task:
+                            if auto_task and product_claimed_by in [None, 'Auto']:
                                 try:
                                     da_val = float(duty_auto_result)
                                     val_a_str = f"{da_val:.2f}%"
-                                except:
-                                    val_a_str = str(duty_auto_result)
+                                except: val_a_str = str(duty_auto_result)
                                 st.markdown(f"""
                                 <div class="metric-container" style="padding: 10px; border-top: 4px solid #f59e0b; text-align: center; margin-bottom: 15px;">
                                     <div class="metric-title" style="margin-bottom: 5px;">Arancel Autos</div>
@@ -1340,12 +1339,11 @@ if hs6_input:
                                 </div>
                                 """, unsafe_allow_html=True)
 
-                            if show_tmec_auto_card:
+                            if show_tmec_auto_card and product_claimed_by in [None, 'Auto']:
                                 try:
                                     dta_val = float(duty_tmec_auto_result)
                                     val_ta_str = f"{dta_val:.2f}%"
-                                except:
-                                    val_ta_str = str(duty_tmec_auto_result)
+                                except: val_ta_str = str(duty_tmec_auto_result)
                                 st.markdown(f"""
                                 <div class="metric-container" style="padding: 10px; border-top: 4px solid #10b981; text-align: center; margin-bottom: 15px;">
                                     <div class="metric-title" style="margin-bottom: 5px;">Autopartes TMEC</div>
@@ -1353,12 +1351,11 @@ if hs6_input:
                                 </div>
                                 """, unsafe_allow_html=True)
                             
-                            if mhdv_task:
+                            if mhdv_task and product_claimed_by in [None, 'MHDV']:
                                 try:
                                     dm_val = float(duty_mhdv_result)
                                     val_m_str = f"{dm_val:.2f}%"
-                                except:
-                                    val_m_str = str(duty_mhdv_result)
+                                except: val_m_str = str(duty_mhdv_result)
                                 st.markdown(f"""
                                 <div class="metric-container" style="padding: 10px; border-top: 4px solid #7c3aed; text-align: center; margin-bottom: 15px;">
                                     <div class="metric-title" style="margin-bottom: 5px;">Arancel MHDV</div>
@@ -1366,12 +1363,11 @@ if hs6_input:
                                 </div>
                                 """, unsafe_allow_html=True)
 
-                            if show_tmec_mhdv_card:
+                            if show_tmec_mhdv_card and product_claimed_by in [None, 'MHDV']:
                                 try:
                                     dtm_val = float(duty_tmec_mhdv_result)
                                     val_tm_str = f"{dtm_val:.2f}%"
-                                except:
-                                    val_tm_str = str(duty_tmec_mhdv_result)
+                                except: val_tm_str = str(duty_tmec_mhdv_result)
                                 st.markdown(f"""
                                 <div class="metric-container" style="padding: 10px; border-top: 4px solid #a855f7; text-align: center; margin-bottom: 15px;">
                                     <div class="metric-title" style="margin-bottom: 5px;">Partes MHDV TMEC</div>
@@ -1379,16 +1375,27 @@ if hs6_input:
                                 </div>
                                 """, unsafe_allow_html=True)
 
-                            if wood_task:
+                            if wood_task and product_claimed_by in [None, 'Wood']:
                                 try:
                                     dw_val = float(duty_wood_result)
                                     val_w_str = f"{dw_val:.2f}%"
-                                except:
-                                    val_w_str = str(duty_wood_result)
+                                except: val_w_str = str(duty_wood_result)
                                 st.markdown(f"""
                                 <div class="metric-container" style="padding: 10px; border-top: 4px solid #84cc16; text-align: center; margin-bottom: 15px;">
                                     <div class="metric-title" style="margin-bottom: 5px;">Arancel Wood</div>
                                     <div class="metric-value" style="font-size: 1.5rem;">{val_w_str}</div>
+                                </div>
+                                """, unsafe_allow_html=True)
+
+                            if semi_task and product_claimed_by in [None, 'Semi']:
+                                try:
+                                    dsemi_val = float(duty_semi_result)
+                                    val_semi_str = f"{dsemi_val:.2f}%"
+                                except: val_semi_str = str(duty_semi_result)
+                                st.markdown(f"""
+                                <div class="metric-container" style="padding: 10px; border-top: 4px solid #6366f1; text-align: center; margin-bottom: 15px;">
+                                    <div class="metric-title" style="margin-bottom: 5px;">Arancel Semiconductors</div>
+                                    <div class="metric-value" style="font-size: 1.5rem;">{val_semi_str}</div>
                                 </div>
                                 """, unsafe_allow_html=True)
 
@@ -1418,6 +1425,8 @@ if hs6_input:
                                     st.session_state.user_tmec_mhdv_decisions[current_hts] = duty_tmec_mhdv_result
                                 if wood_task:
                                     st.session_state.user_wood_decisions[current_hts] = {'duty': duty_wood_result, 'category': cat_wood_result}
+                                if semi_task:
+                                    st.session_state.user_semi_decisions[current_hts] = duty_semi_result
                                 
                                 if not is_last:
                                     st.session_state.wizard_step += 1
@@ -1450,6 +1459,10 @@ if hs6_input:
                     # 3. Si la fracción está "en espera", proyectamos el arancel base lógico por defecto
                     match_code, duty = get_direct_matches(code, metals_db)
                     if match_code:
+                        is_outside_ch = str(code)[:2] not in ['72', '73', '74', '76']
+                        if is_outside_ch:
+                            return 0.0
+                            
                         if duty in [50.0, 25.0]:
                             return duty
                         elif duty == "Annex III":
@@ -1539,6 +1552,23 @@ if hs6_input:
                     return pd.Series([0.0, ""])
 
                 hts_filtrado[['Wood_Duty', 'Wood_Category']] = hts_filtrado.apply(calculate_wood_base, axis=1)
+
+                # --- LÓGICA Sec 232 (Semiconductors) ---
+                def calculate_semi_row(row):
+                    code = row['Code']
+                    # 1. Fracción activa en el Wizard → valor en tiempo real
+                    if wizard_queue and code == current_hts and semi_task:
+                        return duty_semi_result
+                    # 2. Decisión ya guardada por el usuario
+                    if code in st.session_state.user_semi_decisions:
+                        return st.session_state.user_semi_decisions[code]
+                    # 3. Proyección por defecto (arancel base del parquet)
+                    match_code, duty = get_semi_match(code, semi_db)
+                    if match_code:
+                        return duty
+                    return 0.0
+
+                hts_filtrado['Sec 232 (Semiconductors)'] = hts_filtrado.apply(calculate_semi_row, axis=1)
                 
                 # =====================================================================
                 # NUEVA LÓGICA V5: TABLAS SEPARADAS PARA CHINA Y MÉXICO
@@ -1558,12 +1588,13 @@ if hs6_input:
                     try:
                         v = float(val)
                         if v == 10.0:
-                            # 1. Verificamos si el código pertenece a los metales controlados
+                            # 1. Verificamos si el código pertenece a los metales controlados y se le aplicó arancel
                             match_code, _ = get_direct_matches(code, metals_db)
                             children = get_10digit_children(code, metals_db, auxiliar)
-                            is_in_metals = bool(match_code) or not children.empty
+                            metals_duty_applied = float(row.get('Sec 232 (Metals)', 0.0)) > 0
+                            is_in_metals = (bool(match_code) or not children.empty) and metals_duty_applied
                             
-                            # 2. Si está en metals_db, aplicamos la regla de texto según su capítulo
+                            # 2. Si está en metals_db y aplica arancel, aplicamos la regla de texto según su capítulo
                             if is_in_metals:
                                 cap = code[:2]
                                 if cap in ['72', '73']: return "10.00% sobre el contenido que no es de acero"
@@ -1577,6 +1608,27 @@ if hs6_input:
                 # 1. PREPARACIÓN DE TABLA: CHINA
                 # ---------------------------------------------------------------------
                 hts_china = hts_filtrado.copy()
+
+                def apply_hierarchy_china(row):
+                    semi = float(row.get('Sec 232 (Semiconductors)', 0.0))
+                    auto = float(row.get('Auto_Duty', 0.0))
+                    mhdv = float(row.get('MHDV_Duty', 0.0))
+                    metals = float(row.get('Sec 232 (Metals)', 0.0))
+                    wood = float(row.get('Wood_Duty', 0.0))
+
+                    if semi > 0: auto = mhdv = metals = wood = 0.0
+                    elif auto > 0: mhdv = metals = wood = 0.0
+                    elif mhdv > 0: metals = wood = 0.0
+                    elif metals > 0: wood = 0.0
+
+                    row['Sec 232 (Semiconductors)'] = semi
+                    row['Auto_Duty'] = auto
+                    row['MHDV_Duty'] = mhdv
+                    row['Sec 232 (Metals)'] = metals
+                    row['Wood_Duty'] = wood
+                    return row
+
+                hts_china = hts_china.apply(apply_hierarchy_china, axis=1)
                 
                 # 1. Aplicamos el formato de Sec 122 PRIMERO para poder leer el texto en el Total
                 hts_china['Sec 122'] = hts_china.apply(format_sec122_duty_row, axis=1)
@@ -1589,6 +1641,12 @@ if hs6_input:
                     except: sec301 = 0.0
                     try: duty_autos = float(row['Auto_Duty'])
                     except: duty_autos = 0.0
+                    try: duty_mhdv = float(row.get('MHDV_Duty', 0.0))
+                    except: duty_mhdv = 0.0
+                    try: duty_wood = float(row.get('Wood_Duty', 0.0))
+                    except: duty_wood = 0.0
+                    try: duty_semi = float(row.get('Sec 232 (Semiconductors)', 0.0))
+                    except: duty_semi = 0.0
                     
                     # 2. Lógica para aislar el texto de la Sec 122 si existe
                     sec122_val = row.get('Sec 122', 10.0)
@@ -1601,7 +1659,7 @@ if hs6_input:
                         try: duty_122 = float(str(sec122_val).replace('%', ''))
                         except: duty_122 = 10.0
                             
-                    sum_pct = math_base + duty_metals + sec301 + duty_122 + duty_autos
+                    sum_pct = math_base + duty_metals + sec301 + duty_122 + duty_autos + duty_mhdv + duty_wood + duty_semi
                     fixed = row['Fixed']
                     
                     # 3. Construcción del arancel base
@@ -1636,37 +1694,28 @@ if hs6_input:
                 # Agregamos la columna Sec 122 directamente a la lista
                 cols_china.append('Sec 122')
                 
-                if has_metals_match:
+                if (hts_china['Sec 232 (Metals)'] > 0).any():
                     cols_china.append('Sec 232 (Metals)')
                     format_dict_china['Sec 232 (Metals)'] = smart_pct
                 
                 hts_china['Sec 232 (Auto)'] = hts_china['Auto_Duty']
-                
-                had_auto_eval = any(v.get('auto_task') is not None for v in wizard_queue_dict.values())
-                has_auto_decisions = any(c in st.session_state.user_auto_decisions for c in hts_china['Code'])
-                has_autos_match = (hts_china['Sec 232 (Auto)'] > 0).any() or had_auto_eval or has_auto_decisions
-                
-                if has_autos_match:
+                if (hts_china['Sec 232 (Auto)'] > 0).any():
                     cols_china.append('Sec 232 (Auto)')
                     format_dict_china['Sec 232 (Auto)'] = smart_pct
 
                 hts_china['Sec 232 (mhdv)'] = hts_china['MHDV_Duty']
-                had_mhdv_eval = any(v.get('mhdv_task') is not None for v in wizard_queue_dict.values())
-                has_mhdv_decisions = any(c in st.session_state.user_mhdv_decisions for c in hts_china['Code'])
-                has_mhdv_match = (hts_china['Sec 232 (mhdv)'] > 0).any() or had_mhdv_eval or has_mhdv_decisions
-
-                if has_mhdv_match:
+                if (hts_china['Sec 232 (mhdv)'] > 0).any():
                     cols_china.append('Sec 232 (mhdv)')
                     format_dict_china['Sec 232 (mhdv)'] = smart_pct
 
                 hts_china['Sec 232 (Wood)'] = hts_china['Wood_Duty']
-                had_wood_eval = any(v.get('wood_task') is not None for v in wizard_queue_dict.values())
-                has_wood_decisions = any(c in st.session_state.user_wood_decisions for c in hts_china['Code'])
-                has_wood_match = (hts_china['Sec 232 (Wood)'] > 0).any() or had_wood_eval or has_wood_decisions
-
-                if has_wood_match:
+                if (hts_china['Sec 232 (Wood)'] > 0).any():
                     cols_china.append('Sec 232 (Wood)')
                     format_dict_china['Sec 232 (Wood)'] = smart_pct
+
+                if (hts_china['Sec 232 (Semiconductors)'] > 0).any():
+                    cols_china.append('Sec 232 (Semiconductors)')
+                    format_dict_china['Sec 232 (Semiconductors)'] = smart_pct
 
                 cols_china.append('Sec 301')
                 cols_china.append('Total')
@@ -1790,6 +1839,27 @@ if hs6_input:
 
                 hts_mexico['Sec 232 (mhdv)'] = hts_mexico.apply(apply_mhdv_mexico, axis=1)
 
+                def apply_hierarchy_mexico(row):
+                    semi = float(row.get('Sec 232 (Semiconductors)', 0.0))
+                    auto = float(row.get('Sec 232 (Auto)', 0.0))
+                    mhdv = float(row.get('Sec 232 (mhdv)', 0.0))
+                    metals = float(row.get('Sec 232 (Metals)', 0.0))
+                    wood = float(row.get('Wood_Duty', 0.0))
+
+                    if semi > 0: auto = mhdv = metals = wood = 0.0
+                    elif auto > 0: mhdv = metals = wood = 0.0
+                    elif mhdv > 0: metals = wood = 0.0
+                    elif metals > 0: wood = 0.0
+
+                    row['Sec 232 (Semiconductors)'] = semi
+                    row['Sec 232 (Auto)'] = auto
+                    row['Sec 232 (mhdv)'] = mhdv
+                    row['Sec 232 (Metals)'] = metals
+                    row['Wood_Duty'] = wood
+                    return row
+
+                hts_mexico = hts_mexico.apply(apply_hierarchy_mexico, axis=1)
+
                 # 1. Aplicamos el formato de Sec 122 PRIMERO
                 hts_mexico['Sec 122'] = hts_mexico.apply(format_sec122_duty_row, axis=1)
 
@@ -1802,6 +1872,12 @@ if hs6_input:
                     except: duty_metals = 0.0
                     try: duty_autos = float(row['Sec 232 (Auto)'])
                     except: duty_autos = 0.0
+                    try: duty_mhdv = float(row.get('Sec 232 (mhdv)', 0.0))
+                    except: duty_mhdv = 0.0
+                    try: duty_wood = float(row.get('Wood_Duty', 0.0))
+                    except: duty_wood = 0.0
+                    try: duty_semi = float(row.get('Sec 232 (Semiconductors)', 0.0))
+                    except: duty_semi = 0.0
                     
                     # 2. Lógica para aislar el texto de la Sec 122
                     sec122_val = row.get('Sec 122', 10.0)
@@ -1814,7 +1890,7 @@ if hs6_input:
                         try: duty_122 = float(str(sec122_val).replace('%', ''))
                         except: duty_122 = 10.0
                     
-                    sum_pct = math_base + duty_metals + duty_122 + duty_autos
+                    sum_pct = math_base + duty_metals + duty_122 + duty_autos + duty_mhdv + duty_wood + duty_semi
                     fixed = row['Fixed']
                     
                     if pd.notna(fixed) and fixed:
@@ -1842,23 +1918,27 @@ if hs6_input:
                 
                 cols_mexico.append('Sec 122')
 
-                # Restauramos la visibilidad de Metales, Autos y Total para México
-                if has_metals_match:
+                # Evaluamos dinámicamente qué columnas mostrar en México si su valor final es > 0
+                if (hts_mexico['Sec 232 (Metals)'] > 0).any():
                     cols_mexico.append('Sec 232 (Metals)')
                     format_dict_mexico['Sec 232 (Metals)'] = smart_pct
                 
-                if has_autos_match:
+                if (hts_mexico['Sec 232 (Auto)'] > 0).any():
                     cols_mexico.append('Sec 232 (Auto)')
                     format_dict_mexico['Sec 232 (Auto)'] = smart_pct
 
-                if has_mhdv_match:
+                if (hts_mexico['Sec 232 (mhdv)'] > 0).any():
                     cols_mexico.append('Sec 232 (mhdv)')
                     format_dict_mexico['Sec 232 (mhdv)'] = smart_pct
 
                 hts_mexico['Sec 232 (Wood)'] = hts_mexico['Wood_Duty']
-                if has_wood_match:
+                if (hts_mexico['Sec 232 (Wood)'] > 0).any():
                     cols_mexico.append('Sec 232 (Wood)')
                     format_dict_mexico['Sec 232 (Wood)'] = smart_pct
+
+                if (hts_mexico['Sec 232 (Semiconductors)'] > 0).any():
+                    cols_mexico.append('Sec 232 (Semiconductors)')
+                    format_dict_mexico['Sec 232 (Semiconductors)'] = smart_pct
 
                 cols_mexico.append('Total')
 
