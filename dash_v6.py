@@ -237,7 +237,7 @@ def clean_numeric_code(df, col_name):
         df[col_name] = df[col_name].astype(str).str.strip().str.replace('.', '', regex=False)
     return df
 
-@st.cache_data(show_spinner="Cargando bases de datos v2... Por favor espere.")
+@st.cache_data(show_spinner="Cargando bases de datos... Por favor espere.")
 def load_data(target_country="China"):
     base_path = 'data/parquet_v3/'
     
@@ -811,13 +811,9 @@ if hs6_input:
                     direct_exc_code, _ = get_direct_matches(code, exc_122_db)
                     
                     if direct_exc_code:
-                        # Si está exento, revisamos si la exención proviene de Autos
-                        is_in_auto = get_direct_matches(code, auto_db)[0] is not None
-                        if is_in_auto:
-                            # Requiere ir al Wizard para poder reaccionar en vivo si el usuario rechaza el auto
-                            needs_wizard = True
-                        else:
-                            st.session_state.user_sec122_decisions[code] = 0.0
+                        # Cualquier código exento por Auto, MHDV, Wood o Semi requiere ir al Wizard
+                        # para poder reaccionar en vivo y aplicar el 10% si el usuario rechaza la exclusión
+                        needs_wizard = True
                     else:
                         exc_children = get_10digit_children(code, exc_122_db, auxiliar)
                         if not exc_children.empty:
@@ -1029,7 +1025,7 @@ if hs6_input:
                                     f"&nbsp;&nbsp;&nbsp;**a.** TPP mayor a 14,000 y menor a 17,500, con DRAM mayor a 4,500 GB/s y menor a 5,000 GB/s.\n\n"
                                     f"&nbsp;&nbsp;&nbsp;**b.** TPP mayor a 20,800 y menor a 21,100, con DRAM mayor a 5,800 GB/s y menor a 6,200 GB/s."
                                 )
-                                ans_semi_specs = st.radio("semi_specs", ["No", "Sí"], key=f"rad_semi_specs_{current_hts}", label_visibility="collapsed")
+                                ans_semi_specs = st.radio("semi_specs", ["Sí", "No"], key=f"rad_semi_specs_{current_hts}", label_visibility="collapsed")
                                 has_previous_question = True
 
                                 if ans_semi_specs == "Sí":
@@ -1198,7 +1194,7 @@ if hs6_input:
                                 if needs_15_pct_check:
                                     if has_previous_question: st.markdown("<hr style='margin: 15px 0;'>", unsafe_allow_html=True)
                                     st.markdown(f"**Metales (Fracción {current_hts}):** ¿Cuál es el peso conjunto de Acero, Aluminio y/o Cobre en el producto?")
-                                    meets_15_pct = st.radio("15pct", ["Menor al 15%", "Igual o mayor al 15%"], key=f"rad_15_{current_hts}", label_visibility="collapsed")
+                                    meets_15_pct = st.radio("15pct", ["Igual o mayor al 15%", "Menor al 15%"], key=f"rad_15_{current_hts}", label_visibility="collapsed")
                                     has_previous_question = True
                                     
                                 if meets_15_pct == "Menor al 15%":
@@ -1283,8 +1279,15 @@ if hs6_input:
                                 scope_val = sec122_task.get('scope', '')
                                 desc_val = sec122_task.get('desc', '')
                                 
-                                # Si fue reclamado por jerarquías exentas (No-Metales), la Sec 122 no aplica
-                                if product_claimed_by in ['Auto', 'MHDV', 'Wood', 'Semi']:
+                                # Verificamos si la jerarquía que reclamó el producto retuvo el arancel (no fue exento por antigüedad/uso)
+                                duty_retained = False
+                                if product_claimed_by == 'Auto' and duty_auto_result > 0: duty_retained = True
+                                elif product_claimed_by == 'MHDV' and duty_mhdv_result > 0: duty_retained = True
+                                elif product_claimed_by == 'Wood' and duty_wood_result > 0: duty_retained = True
+                                elif product_claimed_by == 'Semi' and duty_semi_result > 0: duty_retained = True
+
+                                # Si fue reclamado por jerarquías exentas (No-Metales) y conservó su arancel, la Sec 122 no aplica
+                                if product_claimed_by in ['Auto', 'MHDV', 'Wood', 'Semi'] and duty_retained:
                                     duty_sec122_result = 0.0
                                 else:
                                     if 'ex' in scope_val or 'aircraft' in scope_val:
