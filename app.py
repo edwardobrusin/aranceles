@@ -5,7 +5,7 @@ import streamlit as st
 # Solo modifica esta variable para apuntar 
 # al archivo de la versión que quieres mostrar
 # ==========================================
-VERSION_ACTUAL = "dash_v7.py"
+VERSION_ACTUAL = "dash_v8.py"
 
 
 # ==========================================

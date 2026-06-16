@@ -154,7 +154,220 @@ st.markdown("""
 # Encabezado Principal Institucional
 st.markdown("<h1 style='color: #2596be; font-size: 2.8rem;'>Monitor de Comercio y Aranceles</h1>", unsafe_allow_html=True)
 st.markdown("<p style='color: #64748B; font-size: 0.85rem; margin-top: -15px; margin-bottom: 5px; text-align: right;'>Última actualización: 11/06/2026</p>", unsafe_allow_html=True)
-st.markdown("<hr style='border-color: #2596be; margin-top: -10px; margin-bottom: 0px; border-width: 2px;'>", unsafe_allow_html=True)
+st.markdown("<hr style='border-color: #2596be; margin-top: -10px; margin-bottom: 15px; border-width: 2px;'>", unsafe_allow_html=True)
+
+# -----------------------------------------------------------------------------
+# SECCIÓN INFORMATIVA: MARCO ARANCELARIO GENERAL
+# -----------------------------------------------------------------------------
+with st.expander("📖 Marco Arancelario General", expanded=False):
+    st.markdown("""<div style='padding: 10px;'>
+
+<details style='margin-bottom: 10px;'>
+<summary style='color: #008889; font-size: 1.5rem; font-weight: bold; cursor: pointer;'>🇲🇽 México</summary>
+<div style='padding-left: 15px; padding-top: 10px;'>
+
+<details style='margin-bottom: 5px;'>
+<summary style='color: #73c6e3; font-size: 1.2rem; font-weight: bold; cursor: pointer;'><a href='https://www.snice.gob.mx/cs/avi/snice/ligie.info22.html' target='_blank' style='color: inherit; text-decoration: none;'>LIGIE (Ley de los Impuestos Generales de Importación y de Exportación)</a></summary>
+<div style='padding-left: 15px;'>
+<p style='color: #475569; font-size: 0.9rem;'>
+La <a href='https://www.snice.gob.mx/cs/avi/snice/ligie.info22.html' target='_blank' style='color: #2596be; text-decoration: none;'>LIGIE</a> es el instrumento jurídico mediante el cual se define la política comercial de México, ya que permite identificar los impuestos a la exportación e importación de las mercancías y es la base para la generación de las estadísticas del comercio exterior necesarias para establecer y evaluar distintas políticas públicas, así como realizar análisis económicos más específicos.<br>
+La base de datos de la <a href='https://www.snice.gob.mx/cs/avi/snice/ligie.info22.html' target='_blank' style='color: #2596be; text-decoration: none;'>LIGIE</a> es el insumo para aplicar el <i>Arancel</i> en esta sección.
+</p>
+</div>
+</details>
+
+</div>
+</details>
+
+<hr style='border-color: #E2E8F0;'>
+
+<details style='margin-bottom: 10px;'>
+<summary style='color: #008889; font-size: 1.5rem; font-weight: bold; cursor: pointer;'>🇺🇸 Estados Unidos</summary>
+<div style='padding-left: 15px; padding-top: 10px;'>
+
+<details style='margin-bottom: 5px;'>
+<summary style='color: #73c6e3; font-size: 1.2rem; font-weight: bold; cursor: pointer;'><a href='https://hts.usitc.gov/' target='_blank' style='color: inherit; text-decoration: none;'>HTS (Harmonized Tariff Schedule)</a></summary>
+<div style='padding-left: 15px;'>
+<p style='color: #475569; font-size: 0.9rem;'>
+El <a href='https://hts.usitc.gov/' target='_blank' style='color: #2596be; text-decoration: none;'>HTS</a> de los Estados Unidos establece las tasas arancelarias y las categorías estadísticas para todas las mercancías importadas a los Estados Unidos. El <a href='https://hts.usitc.gov/' target='_blank' style='color: #2596be; text-decoration: none;'>HTS</a> se basa en el <a href='https://www.wcoomd.org/en/topics/nomenclature/overview/what-is-the-harmonized-system.aspx' target='_blank' style='color: #2596be; text-decoration: none;'>Sistema Armonizado</a> internacional, que es el sistema global de nomenclatura aplicado a la mayoría del comercio mundial de mercancías.<br>
+La base de datos del <a href='https://hts.usitc.gov/' target='_blank' style='color: #2596be; text-decoration: none;'>HTS</a> es el insumo para aplicar el arancel <i>General</i> en esta sección.
+</p>
+</div>
+</details>
+
+<details style='margin-bottom: 5px;'>
+<summary style='color: #73c6e3; font-size: 1.2rem; font-weight: bold; cursor: pointer;'><a href='https://www.whitehouse.gov/presidential-actions/2026/02/imposing-a-temporary-import-surcharge-to-address-fundamental-international-payments-problems/' target='_blank' style='color: inherit; text-decoration: none;'>Sección 122</a></summary>
+<div style='padding-left: 15px;'>
+<ul style='color: #475569; font-size: 0.9rem;'>
+<li><b>Arancel Temporal a la Importación (Temporary Import Surcharge)</b></li>
+<li><b>Arancel:</b> 10% ad valorem</li>
+<li><b>Reparaciones en el Extranjero:</b> 10% sobre el valor de la reparación.</li>
+<li><b>Ensamblado en el Extranjero:</b> 10% sobre el valor total menos el valor de los componentes de EUA.</li>
+<li><b>Productos clasificados en la Sección 232 de Metales:</b> 10% sobre el contenido que no es acero, aluminio o cobre.</li>
+<li><b>Exenciones:</b>
+<ul>
+<li><b>T-MEC:</b> Si se clasifican como “Free” (Libre).</li>
+<li><b>Anexo II (Fracciones Exentas):</b>
+<ul>
+<li><b>Ex:</b> La fracción tiene arancel, excepto el producto especificado.</li>
+<li><b>Aeronaves (Aircraft):</b> Si son partes, componentes o ensamblajes de aeronaves civiles.</li>
+</ul>
+</li>
+<li><b>Sectoriales 232:</b> Automóviles y sus partes, vehículos pesados y sus partes, autobuses y sus partes, madera y semiconductores.</li>
+</ul>
+</li>
+<li><b>Fecha de inicio:</b> 24/02/2026.</li>
+<li><b>Fecha de término:</b> 24/07/2026.</li>
+</ul>
+</div>
+</details>
+
+<details style='margin-bottom: 5px;'>
+<summary style='color: #73c6e3; font-size: 1.2rem; font-weight: bold; cursor: pointer;'>Sección 232 (5 sectores)</summary>
+<div style='padding-left: 15px; padding-top: 5px;'>             
+
+<div style='padding-bottom: 10px; color: #475569; font-size: 0.9rem;'>
+<b>Jerarquía de Aplicación:</b>
+<ol style="margin-top: 5px; margin-bottom: 5px;">
+<li>Semiconductores y derivados</li>
+<li>Automóviles y sus partes, MHDV’s y sus partes, Autobuses y sus partes, y Otros</li>
+<li>Aluminio, Acero y Cobre</li>
+<li>Madera, Troncos y Derivados</li>
+</ol>
+</div>
+
+<details style='margin-bottom: 5px;'>
+<summary style='color: #2596be; font-weight: bold; cursor: pointer;'><a href='https://www.whitehouse.gov/presidential-actions/2026/06/further-adjusting-the-tariff-regimes-for-imports-of-aluminum-steel-and-copper-into-the-united-states/' target='_blank' style='color: inherit; text-decoration: none;'>1. Aluminio, Acero y Cobre (Aluminum, Steel and Copper)</a></summary>
+<div style='padding: 10px; color: #475569; font-size: 0.9rem;'>
+<b>Vigencia:</b>
+<li>El 1 de junio de 2026, se emitió la proclamación <i><a href='https://www.whitehouse.gov/presidential-actions/2026/06/further-adjusting-the-tariff-regimes-for-imports-of-aluminum-steel-and-copper-into-the-united-states/' target='_blank' style='color: #2596be; text-decoration: none;'>Further Adjusting the Tariff Regimes for Imports of Aluminum, Steel and Copper into the United States</a></i>, dicha medida entró en vigor el 8 de junio de 2026 y se mantendrá vigente hasta el 31 de diciembre de 2027.</li>
+<li>A partir del 1 de enero de 2028, los esquemas preferenciales temporales y las subpartidas especiales (9903.82.20 a la 9903.82.26) serán eliminados del HTSUS, regresando al mecanismo establecido en la proclamación de abril (<a href='https://www.whitehouse.gov/presidential-actions/2026/04/strengthening-actions-taken-to-adjust-imports-of-aluminum-steel-and-copper-into-the-united-states/' target='_blank' style='color: #2596be; text-decoration: none;'>Strengthening Actions Taken to Adjust Imports of Aluminum, Steel and Copper into the United States</a>).</li>
+<b>Principales modificaciones respecto a la proclamación de abril:</b> El umbral legal para considerar que un producto está compuesto "enteramente" de metal estadounidense se reduce del 95% al 85%. Se crea un nuevo Anexo, el “<a href='https://www.whitehouse.gov/wp-content/uploads/2026/06/Annex-I-C.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>Annex I-C</a>” compuesto enteramente por artículos contenidos previamente en el “<a href='https://www.whitehouse.gov/wp-content/uploads/2026/06/Annex-I-B.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>Annex I-B</a>” con un arancel general temporal del 25% y diversas reglas específicas. Se reubicaron 176 productos específicos (10 dígitos).<br><br>
+<b>Estructura de Tasas Generales por Anexo</b><br>
+<b><a href='https://www.whitehouse.gov/wp-content/uploads/2026/06/Annex-I-A.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>Anexo I-A (Materias Primas y Derivados Principales)</a>:</b> Tasa general del 50% (10% si cumple con el umbral de fundición y moldeado de EUA).<br><br>
+<b><a href='https://www.whitehouse.gov/wp-content/uploads/2026/06/Annex-I-B.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>Anexo I-B (Derivados Secundarios e Insumos)</a>:</b> Tasa general del 25% (10% si cumple con el umbral de fundición y moldeado de EUA).<br>
+<ul style="margin-top: 5px; margin-bottom: 15px;">
+<li>Si cualquier parte clasificable en los capítulos 84, 85 u 87 dentro de este anexo, entra para uso final en la manufactura de equipo industrial móvil (mobile industrial equipment) listados en el Anexo I-C, y equipo agrícola o industrial fijo (agricultural / fixed industrial equipment) listados en el Anexo III, pero no cumple con el umbral de fundición y moldeado de EUA, el arancel aplicable se calcula usando la fórmula: <i>max{0, (15% - Column 1 Rate)}</i></li>
+<li>Para los artículos listados fuera de los Capítulos 72, 73, 74 y 76 del HTSUS, el arancel de la Sección 232 solo aplica si el peso del metal regulado representa al menos el 15% del peso total del artículo importado. Si el producto contiene diversos metales regulados (ej. aluminio y cobre), se debe sumar el peso agregado de dichos metales para calcular si se alcanza el umbral del 15%.</li>
+<li>Cualquier parte clasificable en los capítulos 84, 85 u 87 del HTSUS e incluida en el Anexo I-B, quedará totalmente exenta del pago de la Sec. 232 si se importa exclusivamente para la manufactura de motocicletas.</li>
+</ul>
+<b><a href='https://www.whitehouse.gov/wp-content/uploads/2026/06/Annex-I-C.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>Anexo I-C (Maquinaria y Equipo Móvil)</a>:</b> Tasa general temporal del 25%.<br>
+<ul style="margin-top: 5px; margin-bottom: 15px;">
+<li>Para aluminio fundido y moldeado en EUA o acero derretido y vertido en EUA: <i>max{0, (10% - Column 1 Rate)}</i></li>
+<li>Para los artículos listados fuera de los Capítulos 72, 73, 74 y 76 del HTSUS, el arancel de la Sección 232 solo aplica si el peso del metal regulado representa al menos el 15% del peso total del artículo importado. Si el producto contiene diversos metales regulados (ej. aluminio y cobre), se debe sumar el peso agregado de dichos metales para calcular si se alcanza el umbral del 15%.</li>
+<li>Si un producto encuadra en múltiples supuestos arancelarios, la autoridad aduanera está obligada a aplicar la tasa arancelaria más baja disponible.</li>
+<li>Para los bienes originarios de México y Canadá que califiquen para trato preferencial bajo el T-MEC, el arancel del 25% de la Sección 232 se aplicará de manera seccionada sobre el valor del producto:
+<ul style="list-style-type: circle; margin-top: 5px;">
+<li>El 25% de arancel adicional aplica sobre el valor total del contenido no estadounidense.</li>
+<li>Sobre el contenido estadounidense, la porción que represente hasta el 40% del valor total del producto queda exenta del arancel. Si el contenido estadounidense supera el 40% del valor total, la porción excedente sí paga el 25% de arancel.</li>
+<li>Sin importar el resultado matemático del desglose de contenido anterior, el arancel efectivo total cobrado sobre el producto importado nunca podrá ser inferior al 15% ad valorem.</li>
+</ul>
+</li>
+</ul>
+<b><a href='https://www.whitehouse.gov/wp-content/uploads/2026/06/Annex-II.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>Anexo II (Artículos Exentos)</a>:</b> Tasa general del 0% (excluidos completamente del alcance de la Sección 232).<br><br>
+<b><a href='https://www.whitehouse.gov/wp-content/uploads/2026/06/Annex-III.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>Anexo III (Reducciones Temporales)</a>:</b> Sujetos a esquemas de reducción arancelaria o techos combinados.<br>
+<li>Si no cumple con el umbral de fundición y moldeado de EUA: <i>max{0, (15% - Column 1 Rate)}</i></li>
+<li>Si cumple con el umbral de fundición y moldeado de EUA: <i>max{0, (10% - Column 1 Rate)}</i></li>
+<li>Para los artículos listados fuera de los Capítulos 72, 73, 74 y 76 del HTSUS, el arancel de la Sección 232 solo aplica si el peso del metal regulado representa al menos el 15% del peso total del artículo importado. Si el producto contiene diversos metales regulados (ej. aluminio y cobre), se debe sumar el peso agregado de dichos metales para calcular si se alcanza el umbral del 15%.</li>
+</div>
+</details>
+
+<details style='margin-bottom: 5px;'>
+<summary style='color: #2596be; font-weight: bold; cursor: pointer;'><a href='https://www.whitehouse.gov/presidential-actions/2025/03/adjusting-imports-of-automobiles-and-autombile-parts-into-the-united-states/' target='_blank' style='color: inherit; text-decoration: none;'>2. Automóviles y Autopartes (Automobile and Automobile Parts)</a></summary>
+<div style='padding: 10px; color: #475569; font-size: 0.9rem;'>
+<ul style="margin-top: 5px; margin-bottom: 0px;">
+<li><b>Arancel:</b> 25% ad valorem.</li>
+<li>Posibilidad de presentar documentación sobre el porcentaje de contenido estadounidense en el vehículo, una vez aprobado, el 25% aplica sobre el valor del vehículo que no sea de EUA.</li>
+<li>Si la <a href='https://www.whitehouse.gov/wp-content/uploads/2026/06/Annex-I-C.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>CBP (US Customs and Border Protection)</a> determina que el porcentaje declarado es impreciso, la sanción será aplicar el 25% sobre el valor total del vehículo. Aplica a todos los vehículos del mismo modelo e importador hasta que se corrija.</li>
+<li>No aplica arancel preferente por ensamblaje o reparación en el extranjero, se cobra el 25% sobre el valor total.</li>
+<li><b>Exenciones:</b>
+<ul style="list-style-type: circle; margin-top: 5px;">
+<li><b>Autopartes T-MEC:</b> Excepto kits de desmontaje de automóviles o compilaciones de partes (knock-down kits or parts compilations).</li>
+<li><b>Vehículos Antiguos:</b> 25 años o más desde su fabricación.</li>
+<li><b>Clasificación:</b> Si no consiste en un vehículo de pasajeros (sedanes, vehículos utilitarios deportivos [SUV], vehículos utilitarios crossover, minivans y furgonetas de carga), camión ligero o sus partes.</li>
+</ul>
+</li>
+<li><b>Fecha Proclamación:</b> 26/03/2025.</li>
+</ul>
+</div>
+</details>
+
+<details style='margin-bottom: 5px;'>
+<summary style='color: #2596be; font-weight: bold; cursor: pointer;'><a href='https://www.whitehouse.gov/presidential-actions/2025/10/adjusting-imports-of-medium-and-heavy-duty-vehicles-medium-and-heavy-duty-vehicle-parts-and-buses-into-the-united-states/' target='_blank' style='color: inherit; text-decoration: none;'>3. Vehículos de Carga Mediana y Pesada, Autobuses y Otros Vehículos (MHDV’s, Buses and Other Vehicles)</a></summary>
+<div style='padding: 10px; color: #475569; font-size: 0.9rem;'>
+<ul style="margin-top: 5px; margin-bottom: 0px;">
+<li><b>Arancel:</b> 25% para "Vehículos de carga mediana y pesada" (Medium and heavy duty vehicles) y sus partes.</li>
+<li><b>Arancel:</b> 10% para "Autobuses y otros vehículos" (Buses and other vehicles).</li>
+<li>Posibilidad de presentar documentación sobre el porcentaje de contenido estadounidense en el vehículo, una vez aprobado, el 25% aplica sobre el valor del vehículo que no sea de EUA.</li>
+<li>Se aplica un arancel de 25% a partes certificadas, aún si están fuera de las listas de fracciones reguladas, siempre que vayan a ser usadas en la producción de MHDV’s. Quedan exentos los capítulos 72, 73 y 76.</li>
+<li>No aplica arancel preferente por ensamblaje o reparación en el extranjero, se cobra el 25% sobre el valor total.</li>
+<li><b>Exenciones:</b>
+<ul style="list-style-type: circle; margin-top: 5px;">
+<li><b>Partes T-MEC:</b> Excepto kits de desmontaje de vehículos de carga mediana y pesada o compilaciones de partes.</li>
+<li><b>Vehículos antiguos:</b> 25 años o más desde su fabricación.</li>
+<li><b>Clasificación:</b> Si no se identifica como MHDV’s o sus partes, Autobuses u Otros Vehículos.</li>
+</ul>
+</li>
+<li><b>Fecha Proclamación:</b> 17/10/2025.</li>
+</ul>
+</div>
+</details>
+
+<details style='margin-bottom: 5px;'>
+<summary style='color: #2596be; font-weight: bold; cursor: pointer;'><a href='https://www.whitehouse.gov/presidential-actions/2025/09/adjusting-imports-of-timber-lumber-and-their-derivative-products-into-the-united-states/' target='_blank' style='color: inherit; text-decoration: none;'>4. Madera, Troncos y Derivados (Timber, Lumber and Derivatives)</a></summary>
+<div style='padding: 10px; color: #475569; font-size: 0.9rem;'>
+<ul style="margin-top: 5px; margin-bottom: 0px;">
+<li><b>Arancel:</b> 10% para "Madera y troncos de coníferas / madera blanda" (Softwood timber and lumber).</li>
+<li><b>Arancel:</b> 25% para "Productos de madera tapizados" (Upholstered wooden products) y "Gabinetes de cocina y tocadores" (Kitchen cabinets and Vanities).</li>
+<li><b>Clasificación:</b> Si no se identifica con "Gabinetes de cocina y tocadores" o sus partes dentro de esa misma clasificación, queda libre de arancel.</li>
+<li><b>Arancel Madera y Automóviles:</b> Ante el traslape, solo se aplica el régimen de Automóviles.</li>
+<li><b>Fecha Proclamación:</b> 31/12/2025.</li>
+</ul>
+</div>
+</details>
+
+<details style='margin-bottom: 5px;'>
+<summary style='color: #2596be; font-weight: bold; cursor: pointer;'><a href='https://www.whitehouse.gov/presidential-actions/2026/01/adjusting-imports-of-semiconductors-semiconductor-manufacturing-equipment-and-their-derivative-products-into-the-united-states/' target='_blank' style='color: inherit; text-decoration: none;'>5. Semiconductores y Derivados (Semiconductors and Derivatives)</a></summary>
+<div style='padding: 10px; color: #475569; font-size: 0.9rem;'>
+<ul style="margin-top: 5px; margin-bottom: 0px;">
+<li><b>Arancel:</b> 25% ad valorem.</li>
+<li>La aplicación del arancel dependerá de las especificaciones tecnológicas del producto./li>
+<li>Se exentarán los semiconductores y derivados orientados al desarrollo e infraestructura de EUA.</li>
+<li>Se sobrepone por completo al T-MEC.</li>
+<li><b>Fecha Proclamación:</b> 14/01/2026.</li>
+</ul>
+</div>
+</details>
+
+</div>
+</details>
+
+<details style='margin-bottom: 5px;'>
+<summary style='color: #73c6e3; font-size: 1.2rem; font-weight: bold; cursor: pointer;'><a href='https://hts.usitc.gov/reststop/file?release=currentRelease&filename=China%20Tariffs' target='_blank' style='color: inherit; text-decoration: none;'>Sección 301 (Prácticas desleales y labor forzada)</a></summary>
+<div style='padding-left: 15px;'>
+<ul style='color: #475569; font-size: 0.9rem;'>
+<li><b>Lista Extensa de Aranceles:</b> El Representante Comercial de EUA (USTR) conserva la facultad de otorgar exclusiones para productos específicos.</li>
+<li><b>Países Afectados:</b> En base a la naturaleza de este tablero, solo China se muestra afectado actualmente (existen investigaciones en curso y amenazas a México en este rubro, pero no han sido aplicadas).</li>
+<li><b>Vigencia Continua en Fases:</b> La partida 9903.88.16 está suspendida desde diciembre de 2019. Las grúas de barco a costa y otros equipos de manipulación de carga (9903.91.12 y 9903.91.14) se encuentran suspendidos hasta el 10 de noviembre de 2026.</li>
+<li><b>Enfoque Primario:</b> Herramienta legal de EUA utilizada para responder activamente a políticas o prácticas de gobiernos extranjeros que se consideran desleales, irrazonables o que restringen el comercio estadounidense.</li>
+</ul>
+</div>
+</details>
+
+<details style='margin-bottom: 5px;'>
+<summary style='color: #73c6e3; font-size: 1.2rem; font-weight: bold; cursor: pointer;'><a href='https://dataweb.usitc.gov/tariff/database' target='_blank' style='color: inherit; text-decoration: none;'>T-MEC (USMCA)</a></summary>
+<div style='padding-left: 15px;'>
+<p style='color: #475569; font-size: 0.9rem;'>
+El Tratado entre los Estados Unidos de América, los Estados Unidos Mexicanos y Canadá (<a href='https://dataweb.usitc.gov/tariff/database' target='_blank' style='color: #2596be; text-decoration: none;'>T-MEC</a>) es un acuerdo de libre comercio trilateral entre Estados Unidos, México y Canadá, en vigor desde el 1 de julio de 2020.<br>
+La base de datos que proporciona el <a href='https://dataweb.usitc.gov' target='_blank' style='color: #2596be; text-decoration: none;'>USITC (US International Trade Commission)</a>, se utiliza como insumo para mapear los códigos arancelarios clasificados dentro del <a href='https://dataweb.usitc.gov/tariff/database' target='_blank' style='color: #2596be; text-decoration: none;'>TMEC</a>.
+</p>
+</div>
+</details>
+
+</div>
+</details>
+
+</div>""", unsafe_allow_html=True)
 
 # Diccionario de descripciones para Sección 232 (Acero y Aluminio)
 RAW_232_MAP = {
