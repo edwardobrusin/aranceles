@@ -153,7 +153,7 @@ st.markdown("""
 
 # Encabezado Principal Institucional
 st.markdown("<h1 style='color: #2596be; font-size: 2.8rem;'>Monitor de Comercio y Aranceles</h1>", unsafe_allow_html=True)
-st.markdown("<p style='color: #64748B; font-size: 0.85rem; margin-top: -15px; margin-bottom: 5px; text-align: right;'>Última actualización: 11/06/2026</p>", unsafe_allow_html=True)
+st.markdown("<p style='color: #64748B; font-size: 0.85rem; margin-top: -15px; margin-bottom: 5px; text-align: right;'>Última actualización: 19/06/2026</p>", unsafe_allow_html=True)
 st.markdown("<hr style='border-color: #2596be; margin-top: -10px; margin-bottom: 15px; border-width: 2px;'>", unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
@@ -206,7 +206,7 @@ La base de datos del <a href='https://hts.usitc.gov/' target='_blank' style='col
 <li><b>Productos clasificados en la Sección 232 de Metales:</b> 10% sobre el contenido que no es acero, aluminio o cobre.</li>
 <li><b>Exenciones:</b>
 <ul>
-<li><b>T-MEC:</b> Si se clasifican como “Free” (Libre).</li>
+<li>Productos originarios de México o Canadá que cumplan con los requisitos de ingreso por TMEC.</li>
 <li><b>Anexo II (Fracciones Exentas):</b>
 <ul>
 <li><b>Ex:</b> La fracción tiene arancel, excepto el producto especificado.</li>
@@ -227,7 +227,7 @@ La base de datos del <a href='https://hts.usitc.gov/' target='_blank' style='col
 <div style='padding-left: 15px; padding-top: 5px;'>             
 
 <div style='padding-bottom: 10px; color: #475569; font-size: 0.9rem;'>
-<b>Jerarquía de Aplicación:</b>
+<b>Jerarquía de Aplicación:</b> Si una fracción arancelaria específica aparece listada en más de un anexo de la Sección 232, <b>solo se cobra una tasa arancelaria (es decir, no se acumulan entre sí)</b>, aplicando el principio de especificidad o la tasa que la proclama presidencial defina como prioritaria.  El orden de prelación para el cobro de la tasa arancelaria sigue una jerarquía específica, la cual se estructura de la siguiente manera:
 <ol style="margin-top: 5px; margin-bottom: 5px;">
 <li>Semiconductores y derivados</li>
 <li>Automóviles y sus partes, MHDV’s y sus partes, Autobuses y sus partes, y Otros</li>
@@ -240,8 +240,8 @@ La base de datos del <a href='https://hts.usitc.gov/' target='_blank' style='col
 <summary style='color: #2596be; font-weight: bold; cursor: pointer;'><a href='https://www.whitehouse.gov/presidential-actions/2026/06/further-adjusting-the-tariff-regimes-for-imports-of-aluminum-steel-and-copper-into-the-united-states/' target='_blank' style='color: inherit; text-decoration: none;'>1. Aluminio, Acero y Cobre (Aluminum, Steel and Copper)</a></summary>
 <div style='padding: 10px; color: #475569; font-size: 0.9rem;'>
 <b>Vigencia:</b>
-<li>El 1 de junio de 2026, se emitió la proclamación <i><a href='https://www.whitehouse.gov/presidential-actions/2026/06/further-adjusting-the-tariff-regimes-for-imports-of-aluminum-steel-and-copper-into-the-united-states/' target='_blank' style='color: #2596be; text-decoration: none;'>Further Adjusting the Tariff Regimes for Imports of Aluminum, Steel and Copper into the United States</a></i>, dicha medida entró en vigor el 8 de junio de 2026 y se mantendrá vigente hasta el 31 de diciembre de 2027.</li>
-<li>A partir del 1 de enero de 2028, los esquemas preferenciales temporales y las subpartidas especiales (9903.82.20 a la 9903.82.26) serán eliminados del HTSUS, regresando al mecanismo establecido en la proclamación de abril (<a href='https://www.whitehouse.gov/presidential-actions/2026/04/strengthening-actions-taken-to-adjust-imports-of-aluminum-steel-and-copper-into-the-united-states/' target='_blank' style='color: #2596be; text-decoration: none;'>Strengthening Actions Taken to Adjust Imports of Aluminum, Steel and Copper into the United States</a>).</li>
+<li>El 1 de junio de 2026, se emitió la proclamación <i><a href='https://www.whitehouse.gov/presidential-actions/2026/06/further-adjusting-the-tariff-regimes-for-imports-of-aluminum-steel-and-copper-into-the-united-states/' target='_blank' style='color: #2596be; text-decoration: none;'>Further Adjusting the Tariff Regimes for Imports of Aluminum, Steel and Copper into the United States</a></i>. Esta medida entró en vigor el 8 de junio de 2026 y se mantendrá vigente hasta el 31 de diciembre de 2027.</li>
+<li>A partir del 1 de enero de 2028, los esquemas preferenciales temporales y las subpartidas especiales (9903.82.20 a la 9903.82.26) serán eliminados del HTSUS, regresando al mecanismo establecido en la proclamación de abril (<a href='https://www.whitehouse.gov/presidential-actions/2026/04/strengthening-actions-taken-to-adjust-imports-of-aluminum-steel-and-copper-into-the-united-states/' target='_blank' style='color: #2596be; text-decoration: none;'>Strengthening Actions Taken to Adjust Imports of Aluminum, Steel and Copper into the United States</a>) de 2026.</li>
 <b>Principales modificaciones respecto a la proclamación de abril:</b> El umbral legal para considerar que un producto está compuesto "enteramente" de metal estadounidense se reduce del 95% al 85%. Se crea un nuevo Anexo, el “<a href='https://www.whitehouse.gov/wp-content/uploads/2026/06/Annex-I-C.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>Annex I-C</a>” compuesto enteramente por artículos contenidos previamente en el “<a href='https://www.whitehouse.gov/wp-content/uploads/2026/06/Annex-I-B.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>Annex I-B</a>” con un arancel general temporal del 25% y diversas reglas específicas. Se reubicaron 176 productos específicos (10 dígitos).<br><br>
 <b>Estructura de Tasas Generales por Anexo</b><br>
 <b><a href='https://www.whitehouse.gov/wp-content/uploads/2026/06/Annex-I-A.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>Anexo I-A (Materias Primas y Derivados Principales)</a>:</b> Tasa general del 50% (10% si cumple con el umbral de fundición y moldeado de EUA).<br><br>
@@ -276,6 +276,17 @@ La base de datos del <a href='https://hts.usitc.gov/' target='_blank' style='col
 <summary style='color: #2596be; font-weight: bold; cursor: pointer;'><a href='https://www.whitehouse.gov/presidential-actions/2025/03/adjusting-imports-of-automobiles-and-autombile-parts-into-the-united-states/' target='_blank' style='color: inherit; text-decoration: none;'>2. Automóviles y Autopartes (Automobile and Automobile Parts)</a></summary>
 <div style='padding: 10px; color: #475569; font-size: 0.9rem;'>
 <ul style="margin-top: 5px; margin-bottom: 0px;">
+<li><b>Vigencia:</b>
+<ul style="list-style-type: circle; margin-top: 5px;">
+<li><b>Fecha de Proclamación:</b> 26/03/2025.</li>
+<li><b>Fecha de Entrada en Vigor:</b>
+<ul style="list-style-type: square; margin-top: 5px;">
+<li><b>Automóviles de pasajeros:</b> 03/04/2025.</li>
+<li><b>Autopartes y componentes vehiculares:</b> 03/05/2025.</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><b>Arancel:</b> 25% ad valorem.</li>
 <li>Posibilidad de presentar documentación sobre el porcentaje de contenido estadounidense en el vehículo, una vez aprobado, el 25% aplica sobre el valor del vehículo que no sea de EUA.</li>
 <li>Si la <a href='https://www.whitehouse.gov/wp-content/uploads/2026/06/Annex-I-C.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>CBP (US Customs and Border Protection)</a> determina que el porcentaje declarado es impreciso, la sanción será aplicar el 25% sobre el valor total del vehículo. Aplica a todos los vehículos del mismo modelo e importador hasta que se corrija.</li>
@@ -287,7 +298,6 @@ La base de datos del <a href='https://hts.usitc.gov/' target='_blank' style='col
 <li><b>Clasificación:</b> Si no consiste en un vehículo de pasajeros (sedanes, vehículos utilitarios deportivos [SUV], vehículos utilitarios crossover, minivans y furgonetas de carga), camión ligero o sus partes.</li>
 </ul>
 </li>
-<li><b>Fecha Proclamación:</b> 26/03/2025.</li>
 </ul>
 </div>
 </details>
@@ -296,6 +306,12 @@ La base de datos del <a href='https://hts.usitc.gov/' target='_blank' style='col
 <summary style='color: #2596be; font-weight: bold; cursor: pointer;'><a href='https://www.whitehouse.gov/presidential-actions/2025/10/adjusting-imports-of-medium-and-heavy-duty-vehicles-medium-and-heavy-duty-vehicle-parts-and-buses-into-the-united-states/' target='_blank' style='color: inherit; text-decoration: none;'>3. Vehículos de Carga Mediana y Pesada, Autobuses y Otros Vehículos (MHDV’s, Buses and Other Vehicles)</a></summary>
 <div style='padding: 10px; color: #475569; font-size: 0.9rem;'>
 <ul style="margin-top: 5px; margin-bottom: 0px;">
+<li><b>Vigencia:</b>
+<ul style="list-style-type: circle; margin-top: 5px;">
+<li><b>Fecha Proclamación:</b> 17/10/2025.</li>
+<li><b>Fecha de Entrada en Vigor:</b> 01/11/2025.</li>
+</ul>
+</li>
 <li><b>Arancel:</b> 25% para "Vehículos de carga mediana y pesada" (Medium and heavy duty vehicles) y sus partes.</li>
 <li><b>Arancel:</b> 10% para "Autobuses y otros vehículos" (Buses and other vehicles).</li>
 <li>Posibilidad de presentar documentación sobre el porcentaje de contenido estadounidense en el vehículo, una vez aprobado, el 25% aplica sobre el valor del vehículo que no sea de EUA.</li>
@@ -308,7 +324,6 @@ La base de datos del <a href='https://hts.usitc.gov/' target='_blank' style='col
 <li><b>Clasificación:</b> Si no se identifica como MHDV’s o sus partes, Autobuses u Otros Vehículos.</li>
 </ul>
 </li>
-<li><b>Fecha Proclamación:</b> 17/10/2025.</li>
 </ul>
 </div>
 </details>
@@ -317,11 +332,16 @@ La base de datos del <a href='https://hts.usitc.gov/' target='_blank' style='col
 <summary style='color: #2596be; font-weight: bold; cursor: pointer;'><a href='https://www.whitehouse.gov/presidential-actions/2025/09/adjusting-imports-of-timber-lumber-and-their-derivative-products-into-the-united-states/' target='_blank' style='color: inherit; text-decoration: none;'>4. Madera, Troncos y Derivados (Timber, Lumber and Derivatives)</a></summary>
 <div style='padding: 10px; color: #475569; font-size: 0.9rem;'>
 <ul style="margin-top: 5px; margin-bottom: 0px;">
+<li><b>Vigencia:</b>
+<ul style="list-style-type: circle; margin-top: 5px;">
+<li><b>Fecha Proclamación:</b> 29/09/2025.</li>
+<li><b>Fecha de Entrada en Vigor:</b> 14/10/2025.</li>
+</ul>
+</li>
 <li><b>Arancel:</b> 10% para "Madera y troncos de coníferas / madera blanda" (Softwood timber and lumber).</li>
 <li><b>Arancel:</b> 25% para "Productos de madera tapizados" (Upholstered wooden products) y "Gabinetes de cocina y tocadores" (Kitchen cabinets and Vanities).</li>
 <li><b>Clasificación:</b> Si no se identifica con "Gabinetes de cocina y tocadores" o sus partes dentro de esa misma clasificación, queda libre de arancel.</li>
 <li><b>Arancel Madera y Automóviles:</b> Ante el traslape, solo se aplica el régimen de Automóviles.</li>
-<li><b>Fecha Proclamación:</b> 31/12/2025.</li>
 </ul>
 </div>
 </details>
@@ -330,11 +350,16 @@ La base de datos del <a href='https://hts.usitc.gov/' target='_blank' style='col
 <summary style='color: #2596be; font-weight: bold; cursor: pointer;'><a href='https://www.whitehouse.gov/presidential-actions/2026/01/adjusting-imports-of-semiconductors-semiconductor-manufacturing-equipment-and-their-derivative-products-into-the-united-states/' target='_blank' style='color: inherit; text-decoration: none;'>5. Semiconductores y Derivados (Semiconductors and Derivatives)</a></summary>
 <div style='padding: 10px; color: #475569; font-size: 0.9rem;'>
 <ul style="margin-top: 5px; margin-bottom: 0px;">
+<li><b>Vigencia:</b>
+<ul style="list-style-type: circle; margin-top: 5px;">
+<li><b>Fecha Proclamación:</b> 14/01/2026.</li>
+<li><b>Fecha de Entrada en Vigor:</b> 15/01/2026.</li>
+</ul>
+</li>
 <li><b>Arancel:</b> 25% ad valorem.</li>
-<li>La aplicación del arancel dependerá de las especificaciones tecnológicas del producto./li>
+<li>La aplicación del arancel dependerá de las especificaciones tecnológicas del producto.</li>
 <li>Se exentarán los semiconductores y derivados orientados al desarrollo e infraestructura de EUA.</li>
 <li>Se sobrepone por completo al T-MEC.</li>
-<li><b>Fecha Proclamación:</b> 14/01/2026.</li>
 </ul>
 </div>
 </details>
@@ -358,7 +383,7 @@ La base de datos del <a href='https://hts.usitc.gov/' target='_blank' style='col
 <summary style='color: #73c6e3; font-size: 1.2rem; font-weight: bold; cursor: pointer;'><a href='https://dataweb.usitc.gov/tariff/database' target='_blank' style='color: inherit; text-decoration: none;'>T-MEC (USMCA)</a></summary>
 <div style='padding-left: 15px;'>
 <p style='color: #475569; font-size: 0.9rem;'>
-El Tratado entre los Estados Unidos de América, los Estados Unidos Mexicanos y Canadá (<a href='https://dataweb.usitc.gov/tariff/database' target='_blank' style='color: #2596be; text-decoration: none;'>T-MEC</a>) es un acuerdo de libre comercio trilateral entre Estados Unidos, México y Canadá, en vigor desde el 1 de julio de 2020.<br>
+El Tratado entre los Estados Unidos de América, los Estados Unidos Mexicanos y Canadá (<a href='https://dof.gob.mx/2020/SRE/T_MEC_290620.pdf' target='_blank' style='color: #2596be; text-decoration: none;'>T-MEC</a>) es un acuerdo de libre comercio trilateral entre Estados Unidos, México y Canadá, en vigor desde el 1 de julio de 2020.<br>
 La base de datos que proporciona el <a href='https://dataweb.usitc.gov' target='_blank' style='color: #2596be; text-decoration: none;'>USITC (US International Trade Commission)</a>, se utiliza como insumo para mapear los códigos arancelarios clasificados dentro del <a href='https://dataweb.usitc.gov/tariff/database' target='_blank' style='color: #2596be; text-decoration: none;'>TMEC</a>.
 </p>
 </div>
